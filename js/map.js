@@ -89,15 +89,17 @@ var location = {
 var advert = function (index) {
   autor = this.autor;
   this.author.avatar();
-  offer = this.offer;
-  this.offer.title = getRandomArrayNumber(title);
-  this.offer.address;
-  this.offer.price;
-  this.offer.type = getRandomArrayNumber(type);
-  this.offer.rooms;
-  this.offer.guests;
-  this.offer.checkpoint = getRandomArrayNumber(checkpoint);
-  this.offer.features = getRandomArrayNumber(features);
-  this.offer.description;
-  this.offer.photos = getRandomArrayNumber(photos);
+  offer.title = getRandomArrayNumber(title);
+  offer.address;
+  offer.price;
+  offer.type = getRandomArrayNumber(type);
+  offer.rooms;
+  offer.guests;
+  offer.checkpoint = getRandomArrayNumber(checkpoint);
+  offer.features = getRandomArrayNumber(features);
+  offer.description;
+  offer.photos = getRandomArrayNumber(photos);
+  location = this.location;
+  this.location.locationX;
+  this.location.locationY;
 };
