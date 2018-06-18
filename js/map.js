@@ -7,7 +7,7 @@ var avatarImg = function () {
   return numberImg;
 };
 
-var author = 'img/avatars/user' + avatarImg() + '.png'; //строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются
+var author = 'img/avatars/user' + avatarImg() + '.png'; // строка, адрес изображения вида img/avatars/user{{xx}}.png, где {{xx}} это число от 1 до 8 с ведущим нулём. Например, 01, 02 и т. д. Адреса изображений не повторяются
 
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
@@ -60,9 +60,9 @@ var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-//Возвращает случайное число от - до
+// Возвращает случайное число от - до
 var getRandomNumber = function (min, max) {
-    return Math.floor(Math.random() * (max + 1 - min) + min);
+  return Math.floor(Math.random() * (max + 1 - min) + min);
 };
 
 var PRICE = getRandomNumber(MIN_PRICE, MAX_PRICE);
@@ -72,4 +72,8 @@ var guests = getRandomNumber(MIN_GUEST, MAX_GUEST);
 var location = {
   locationX: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION),
   locationY: getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION)
+};
+
+var advert = function () {
+
 };
