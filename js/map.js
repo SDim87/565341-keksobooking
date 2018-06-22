@@ -1,5 +1,6 @@
 'use strict';
 
+// Константы
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
 var MIN_ROOMS = 1;
@@ -11,19 +12,41 @@ var MAX_X_LOCATION = 900;
 var MIN_Y_LOCATION = 130;
 var MAX_Y_LOCATION = 630;
 
-var avatarQuantity = 8;
-
-
-var author = {
-  avatar: function () {
-    for (var i = 1; i <= avatarQuantity; i++) {
-      var number = 'img/avatars/user0' + i + '.png';
-    }
-
-    return number;
-
-  }
-};
+// Переменные
+var title = [
+  'Большая уютная квартира',
+  'Маленькая неуютная квартира',
+  'Огромный прекрасный дворец',
+  'Маленький ужасный дворец',
+  'Красивый гостевой домик',
+  'Некрасивый негостеприимный домик',
+  'Уютное бунгало далеко от моря',
+  'Неуютное бунгало по колено в воде'
+];
+var type = [
+  'palace',
+  'flat',
+  'house',
+  'bungalo'
+];
+var checkpoint = [
+  '12:00',
+  '13:00',
+  '14:00'
+];
+var features = [
+  'wifi',
+  'dishwasher',
+  'parking',
+  'washer',
+  'elevator',
+  'conditioner'
+];
+var photos = [
+  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+];
 
 // Возвращает случайное число от - до (не включая max)
 var getRandomNumber = function (min, max) {
@@ -39,67 +62,31 @@ var getRandomArrayNumber = function (array) {
 
 };
 
-var offer = {
-  title: [
-    'Большая уютная квартира',
-    'Маленькая неуютная квартира',
-    'Огромный прекрасный дворец',
-    'Маленький ужасный дворец',
-    'Красивый гостевой домик',
-    'Некрасивый негостеприимный домик',
-    'Уютное бунгало далеко от моря',
-    'Неуютное бунгало по колено в воде'
-  ],
-  address: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION),
-  price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-  type: [
-    'palace',
-    'flat',
-    'house',
-    'bungalo'
-  ],
-  rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
-  guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
-  checkpoint: [
-    '12:00',
-    '13:00',
-    '14:00'
-  ],
-  features: [
-    'wifi',
-    'dishwasher',
-    'parking',
-    'washer',
-    'elevator',
-    'conditioner'
-  ],
-  description: '',
-  photos: [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
-  ]
-};
 
-var location = {
-  locationX: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION),
-  locationY: getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION)
-};
+// Создает массив объявлений с рандом значениями
+var createOffers = function (objectCount) {
+  var offerList = [];
 
-var advert = function (index) {
-  autor = this.autor;
-  this.author.avatar();
-  offer.title = getRandomArrayNumber(title);
-  offer.address;
-  offer.price;
-  offer.type = getRandomArrayNumber(type);
-  offer.rooms;
-  offer.guests;
-  offer.checkpoint = getRandomArrayNumber(checkpoint);
-  offer.features = getRandomArrayNumber(features);
-  offer.description;
-  offer.photos = getRandomArrayNumber(photos);
-  location = this.location;
-  this.location.locationX;
-  this.location.locationY;
+  for (var i = 0; i < objectCount; i++) {
+    var autor = {};
+    autor.avatars = 'img/avatars/user0' + (i + 1) + '.png';
+    var offer = {};
+    offer.title = getRandomArrayNumber(title);
+    offer.address = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
+    offer.price = getRandomNumber(MIN_PRICE, MAX_PRICE);
+    offer.type = getRandomArrayNumber(type);
+    offer.rooms = getRandomNumber(MIN_ROOMS, MAX_ROOMS);
+    offer.guests = getRandomNumber(MIN_GUEST, MAX_GUEST);
+    offer.checkpoint = getRandomArrayNumber(checkpoint);
+    offer.features = getRandomArrayNumber(features);
+    offer.description = '';
+    offer.photos = getRandomArrayNumber(photos);
+    var location = {};
+    location.locationX = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION);
+    location.locationY = getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
+    offerList.push();
+  }
+
+  return offerList;
+
 };
