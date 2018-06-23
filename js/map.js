@@ -49,14 +49,14 @@ var photos = [
 ];
 
 // Возвращает случайное число от - до (не включая max)
-var getRandomNumber = function (min, max) {
+function getRandomNumber (min, max) {
 
   return Math.floor(Math.random() * (max + 1 - min) + min);
 
 };
 
 // Возвращает Случайное число из массива
-var getRandomArrayNumber = function (array) {
+function getRandomArrayNumber (array) {
 
   return array[getRandomNumber(0, array.length - 1)];
 
@@ -64,8 +64,9 @@ var getRandomArrayNumber = function (array) {
 
 
 // Создает массив объявлений с рандом значениями
-var createOffers = function (objectCount) {
+function createOffers (objectCount) {
   var offerList = [];
+  var groupObject = [];
 
   for (var i = 0; i < objectCount; i++) {
     var autor = {};
@@ -84,9 +85,18 @@ var createOffers = function (objectCount) {
     var location = {};
     location.locationX = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION);
     location.locationY = getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
-    offerList.push();
+
+    groupObject.push(autor, offer, location);
+    offerList.push(groupObject);
   }
 
   return offerList;
 
+};
+
+console.log(createOffers(8));
+
+// Удаляет класс .map--faded
+function renderMap() {
+  document.querySelector('map').classList.remove('map--faded');
 };
