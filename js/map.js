@@ -1,5 +1,4 @@
 'use strict';
-
 // Константы
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
@@ -62,15 +61,15 @@ function getRandomArrayNumber (array) {
 
 };
 
-
 // Создает массив объявлений с рандом значениями
 function createOffers (objectCount) {
   var offerList = [];
-  var groupObject = [];
+  var groupObject = {};
 
   for (var i = 0; i < objectCount; i++) {
     var autor = {};
     autor.avatars = 'img/avatars/user0' + (i + 1) + '.png';
+
     var offer = {};
     offer.title = getRandomArrayNumber(title);
     offer.address = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
@@ -82,11 +81,15 @@ function createOffers (objectCount) {
     offer.features = getRandomArrayNumber(features);
     offer.description = '';
     offer.photos = getRandomArrayNumber(photos);
+
     var location = {};
     location.locationX = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION);
     location.locationY = getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
 
-    groupObject.push(autor, offer, location);
+    groupObject.autor = autor;
+    groupObject.offer = offer;
+    groupObject.location = location;
+
     offerList.push(groupObject);
   }
 
@@ -98,5 +101,9 @@ console.log(createOffers(8));
 
 // Удаляет класс .map--faded
 function renderMap() {
-  document.querySelector('map').classList.remove('map--faded');
+  document.querySelector('.map').classList.remove('map--faded');
+  return
 };
+
+
+renderMap();
