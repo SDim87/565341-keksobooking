@@ -1,5 +1,6 @@
 'use strict';
 // Константы
+var OBJECT_COUNT = 8;
 var MIN_PRICE = 1000;
 var MAX_PRICE = 1000000;
 var MIN_ROOMS = 1;
@@ -64,28 +65,31 @@ function getRandomArrayNumber (array) {
 // Создает массив объявлений с рандом значениями
 function createOffers (objectCount) {
   var offerList = [];
-  var groupObject = {};
 
-  for (var i = 0; i < objectCount; i++) {
-    var autor = {};
-    autor.avatars = 'img/avatars/user0' + (i + 1) + '.png';
+  for (var i = 0; i < OBJECT_COUNT; i++) {
+    var autor = {
+      avatar: 'img/avatars/user0' + (i + 1) + '.png'
+    }
 
-    var offer = {};
-    offer.title = getRandomArrayNumber(title);
-    offer.address = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
-    offer.price = getRandomNumber(MIN_PRICE, MAX_PRICE);
-    offer.type = getRandomArrayNumber(type);
-    offer.rooms = getRandomNumber(MIN_ROOMS, MAX_ROOMS);
-    offer.guests = getRandomNumber(MIN_GUEST, MAX_GUEST);
-    offer.checkpoint = getRandomArrayNumber(checkpoint);
-    offer.features = getRandomArrayNumber(features);
-    offer.description = '';
-    offer.photos = getRandomArrayNumber(photos);
+    var offer = {
+      title: getRandomArrayNumber(title),
+      address: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION),
+      price: getRandomNumber(MIN_PRICE, MAX_PRICE),
+      type: getRandomArrayNumber(type),
+      rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
+      guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
+      checkpoint: getRandomArrayNumber(checkpoint),
+      features: getRandomArrayNumber(features),
+      description: '',
+      photos: getRandomArrayNumber(photos)
+    }
 
-    var location = {};
-    location.locationX = getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION);
-    location.locationY = getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION);
+    var location = {
+      locationX: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION),
+      locationY: getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION)
+    }
 
+    var groupObject = {};
     groupObject.autor = autor;
     groupObject.offer = offer;
     groupObject.location = location;
@@ -97,13 +101,40 @@ function createOffers (objectCount) {
 
 };
 
-console.log(createOffers(8));
-
 // Удаляет класс .map--faded
 function renderMap() {
   document.querySelector('.map').classList.remove('map--faded');
-  return
+};
+
+// Создает метки на карте
+function mapPinLocation (offerList) {
+  var mapPinBox = document.querySelector('template').content.querySelector('.map__pin');
+  var mapPinImage = document.querySelector('template').content.querySelector('.map__pin > img');
+  var points = [];
+
+  for (var i = 0; i < OBJECT_COUNT; i++) {
+    points[i] = mapPinBox.cloneNode(true);
+    var mapPinX = createOffers()[i].location.locationX / 2;
+    var mapPinY = createOffers()[i].location.locationY;
+    points[i].style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
+    points[i].querySelector('img').src = createOffers()[i].autor.avatar;
+    points[i].querySelector('img').alt = createOffers()[i].offer.title;
+  }
+
+  return points;
+
+};
+
+console.log(mapPinLocation());
+
+function objEnter(points) {
+  for (var i = 0; i < 0; i--) {
+    Things[i]
+  }
+  var obj = document.querySelector('.map__pins');
+  mapPinLocation().appendChild(obj);
 };
 
 
-renderMap();
+createOffers (OBJECT_COUNT); // рандом объекты
+renderMap(); // Разблокирует карту
