@@ -48,28 +48,36 @@ var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
+
+
 // Возвращает случайное число от - до (не включая max)
-function getRandomNumber (min, max) {
+function getRandomNumber(min, max) {
 
   return Math.floor(Math.random() * (max + 1 - min) + min);
 
-};
+}
 
 // Возвращает Случайное число из массива
-function getRandomArrayNumber (array) {
+function getRandomArrayNumber(array) {
 
   return array[getRandomNumber(0, array.length - 1)];
 
-};
+}
+
+// Возвращает массив с случайной длиной
+function getRandomLengthArr(array) {
+  var randomLength = getRandomNumber(0, array.length - 1);
+  return array.slice(randomLength);
+}
 
 // Создает массив объявлений с рандом значениями
-function createOffers (objectCount) {
+function createOffers(objectCount) {
   var offerList = [];
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
     var autor = {
       avatar: 'img/avatars/user0' + (i + 1) + '.png'
-    }
+    };
 
     var offer = {
       title: getRandomArrayNumber(title),
@@ -79,15 +87,15 @@ function createOffers (objectCount) {
       rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
       checkpoint: getRandomArrayNumber(checkpoint),
-      features: getRandomArrayNumber(features),
+      features: getRandomLengthArr(features),
       description: '',
       photos: getRandomArrayNumber(photos)
-    }
+    };
 
     var location = {
       x: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION),
       y: getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION)
-    }
+    };
 
     var groupObject = {};
     groupObject.autor = autor;
@@ -99,32 +107,34 @@ function createOffers (objectCount) {
 
   return offerList;
 
-};
+}
 
 // Определение типа жилья
-function getTipes (obj) {
+function getTipes(obj) {
   var allTipes = {
     'palace': 'Дворец',
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало'
-  }
+  };
 
   return allTipes[obj];
 
-};
+}
 
 // Удаляет класс .map--faded
 function renderMap() {
   document.querySelector('.map').classList.remove('map--faded');
-};
+}
 
-renderMap(); // Разблокирует карту
+// Разблокирует карту
+renderMap();
 
-var offerList = createOffers(OBJECT_COUNT);  // вызов рандом объекты
+// вызов рандом объекты
+var offerList = createOffers(OBJECT_COUNT);
 
 // Создает метки на карте
-function mapPinLocation (offerList) {
+function mapPinLocation(offerList) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
@@ -142,16 +152,17 @@ function mapPinLocation (offerList) {
 
   return fragmentPin;
 
-};
+}
 
 var mapPinBox = document.querySelector('.map__pins');
 var pinsList = mapPinLocation(offerList);
 mapPinBox.appendChild(pinsList);
 
-mapPinLocation(offerList); // Создает Пины на карте
+ // Создает Пины на карте
+mapPinLocation(offerList);
 
 
-function createCard (element) {
+function createCard(element) {
   var popupTemplate = document.querySelector('template').content.querySelector('.popup');
   var popupItem = popupTemplate.cloneNode(true);
 
@@ -164,14 +175,14 @@ function createCard (element) {
   popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkpoint + ', выезд до ' + element.offer.checkpoint;
 
   // Добавление features
-  var featuresTemlate = document.querySelector('template').content.querySelector('.popup__features');
+  var featuresTemlate = popupItem.querySelector('.popup__features');
   var featuresItems = featuresTemlate.querySelectorAll('.popup__feature');
   var featuresFragment = document.createDocumentFragment();
 
   for (var i = 0; i < element.offer.features.length; i++) {
     var featureElement = document.createElement('li');
     featureElement.classList.add('popup__feature');
-    featureElement.classList.add('popup__feature--' + element.offer.features)
+    featureElement.classList.add('popup__feature--' + element.offer.features);
   }
 
   featuresTemlate.appendChild(featuresFragment);
@@ -180,7 +191,7 @@ function createCard (element) {
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
 
   return popupItem;
-};
+}
 
 var cardMap = createCard(offerList[0]);
 mapPinBox.appendChild(cardMap);
