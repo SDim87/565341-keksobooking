@@ -48,8 +48,6 @@ var photos = [
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
-
-
 // Возвращает случайное число от - до (не включая max)
 function getRandomNumber(min, max) {
 
@@ -71,7 +69,7 @@ function getRandomLengthArr(array) {
 }
 
 // Создает массив объявлений с рандом значениями
-function createOffers(objectCount) {
+function createOffers() {
   var offerList = [];
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
@@ -134,19 +132,18 @@ renderMap();
 var offerList = createOffers(OBJECT_COUNT);
 
 // Создает метки на карте
-function mapPinLocation(offerList) {
+function mapPinLocation(element) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-
   for (var i = 0; i < OBJECT_COUNT; i++) {
-    var mapPinX = offerList[i].location.x / 2;
-    var mapPinY = offerList[i].location.y;
+    var mapPinX = element[i].location.x / 2;
+    var mapPinY = element[i].location.y;
     var pin = pinTemplate.cloneNode(true);
 
     pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
-    pin.querySelector('img').src = offerList[i].autor.avatar;
-    pin.querySelector('img').alt = offerList[i].offer.title;
+    pin.querySelector('img').src = element[i].autor.avatar;
+    pin.querySelector('img').alt = element[i].offer.title;
     fragmentPin.appendChild(pin);
   }
 
@@ -158,9 +155,8 @@ var mapPinBox = document.querySelector('.map__pins');
 var pinsList = mapPinLocation(offerList);
 mapPinBox.appendChild(pinsList);
 
- // Создает Пины на карте
+// Создает Пины на карте
 mapPinLocation(offerList);
-
 
 function createCard(element) {
   var popupTemplate = document.querySelector('template').content.querySelector('.popup');
@@ -178,9 +174,8 @@ function createCard(element) {
   var featuresTemlate = popupItem.querySelector('.popup__features');
 
   // очистка содержимого
-  featuresTemlate.innerHTML = ''
+  featuresTemlate.innerHTML = '';
 
-  var featuresItems = featuresTemlate.querySelectorAll('.popup__feature');
   var featuresFragment = document.createDocumentFragment();
 
   for (var i = 0; i < element.offer.features.length; i++) {
@@ -196,14 +191,9 @@ function createCard(element) {
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
 
   return popupItem;
+
 }
 
 var cardMap = createCard(offerList[0]);
 mapPinBox.appendChild(cardMap);
-
-
-console.log(createCard(offerList[0]));
-
-
-
 
