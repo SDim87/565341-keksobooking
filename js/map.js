@@ -86,7 +86,7 @@ function createOffers(objectCount) {
       type: getRandomArrayNumber(type),
       rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
-      checkpoint: getRandomArrayNumber(checkpoint),
+      checkpoint: 'Заезд после ' + getRandomArrayNumber(checkpoint) + ', выезд до ' + getRandomArrayNumber(checkpoint),
       features: getRandomLengthArr(features),
       description: '',
       photos: getRandomArrayNumber(photos)
@@ -172,17 +172,22 @@ function createCard(element) {
   popupItem.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
   popupItem.querySelector('.popup__type').textContent = getTipes(element.offer.type);
   popupItem.querySelector('.popup__text--capacity').textContent = element.offer.rooms + ' комнаты для ' + element.offer.guests + ' гостей';
-  popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkpoint + ', выезд до ' + element.offer.checkpoint;
+  popupItem.querySelector('.popup__text--time').textContent = element.offer.checkpoint;
 
   // Добавление features
   var featuresTemlate = popupItem.querySelector('.popup__features');
+
+  // очистка содержимого
+  featuresTemlate.innerHTML = ''
+
   var featuresItems = featuresTemlate.querySelectorAll('.popup__feature');
   var featuresFragment = document.createDocumentFragment();
 
   for (var i = 0; i < element.offer.features.length; i++) {
     var featureElement = document.createElement('li');
     featureElement.classList.add('popup__feature');
-    featureElement.classList.add('popup__feature--' + element.offer.features);
+    featureElement.classList.add('popup__feature--' + element.offer.features[i]);
+    featuresFragment.appendChild(featureElement);
   }
 
   featuresTemlate.appendChild(featuresFragment);
