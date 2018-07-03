@@ -148,8 +148,6 @@ function getPinLocation(element) {
 // вызов рандом объекты
 var offerList = createOffers(OBJECT_COUNT);
 
-
-
 // Создает блок объявления
 function createCard(element) {
   var popupTemplate = document.querySelector('template').content.querySelector('.popup');
@@ -215,10 +213,9 @@ function pinMouseupHendler() {
 // Разблокирует карту
 function pinMouseupReadyMapHandler() {
   document.querySelector('.map').classList.remove('map--faded');
-  var lockFildset = document.querySelectorAll('fieldset');
 
-  for (var i = 0; i < lockFildset.length; i++) {
-    lockFildset[i].removeAttribute('disabled');
+  for (var j = 0; j < lockFildset.length; j++) {
+    lockFildset[j].removeAttribute('disabled');
   }
   mainForm.classList.remove('ad-form--disabled');
 }
