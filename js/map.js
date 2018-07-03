@@ -11,6 +11,11 @@ var MIN_X_LOCATION = 300;
 var MAX_X_LOCATION = 900;
 var MIN_Y_LOCATION = 130;
 var MAX_Y_LOCATION = 630;
+var PIN_WIDTH = 62;
+var PIN_HEIGHT = 62;
+var PIN_HEIGHT_AFTER = 22;
+var pinMainLeft = 570;
+var pinMainTop = 375;
 
 // Переменные
 var title = [
@@ -120,25 +125,14 @@ function getTipes(obj) {
 
 }
 
-// Удаляет класс .map--faded
-function renderMap() {
-  document.querySelector('.map').classList.remove('map--faded');
-}
-
-// Разблокирует карту
-renderMap();
-
-// вызов рандом объекты
-var offerList = createOffers(OBJECT_COUNT);
-
 // Создает метки на карте
-function mapPinLocation(element) {
+function getPinLocation(element) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
-    var mapPinX = element[i].location.x / 2;
-    var mapPinY = element[i].location.y;
+    var mapPinX = element[i].location.x - PIN_WIDTH / 2;
+    var mapPinY = element[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
     var pin = pinTemplate.cloneNode(true);
 
     pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
@@ -151,13 +145,12 @@ function mapPinLocation(element) {
 
 }
 
-var mapPinBox = document.querySelector('.map__pins');
-var pinsList = mapPinLocation(offerList);
-mapPinBox.appendChild(pinsList);
+// вызов рандом объекты
+var offerList = createOffers(OBJECT_COUNT);
 
-// Создает Пины на карте
-mapPinLocation(offerList);
 
+
+// Создает блок объявления
 function createCard(element) {
   var popupTemplate = document.querySelector('template').content.querySelector('.popup');
   var popupItem = popupTemplate.cloneNode(true);
@@ -194,6 +187,53 @@ function createCard(element) {
 
 }
 
-var cardMap = createCard(offerList[0]);
-mapPinBox.appendChild(cardMap);
+// Блокирует карту и поля ввода
+var mainForm = document.querySelector('.ad-form');
+var lockFildset = document.querySelectorAll('fieldset');
+for (var i = 0; i < lockFildset.length; i++) {
+  lockFildset[i].setAttribute('disabled', '');
+}
 
+// Заполнение поля адреса
+var inputAddress = document.getElementById('address');
+inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
+
+// Возвращает метки и окно объявления на карте
+function pinMouseupHendler() {
+  var mapPinBox = document.querySelector('.map__pins');
+  var pinsList = getPinLocation(offerList);
+  mapPinBox.appendChild(pinsList); // добавляет метки на карту
+  getPinLocation(offerList);
+
+  var cardMap = createCard(offerList[0]);
+  mapPinBox.appendChild(cardMap); // Добавляет объявление на карту
+}
+
+// Определение точки ввода PIN (alfa version 1.0 ) :)
+// inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
+
+// Разблокирует карту
+function pinMouseupReadyMapHandler() {
+  document.querySelector('.map').classList.remove('map--faded');
+  var lockFildset = document.querySelectorAll('fieldset');
+
+  for (var i = 0; i < lockFildset.length; i++) {
+    lockFildset[i].removeAttribute('disabled');
+  }
+  mainForm.classList.remove('ad-form--disabled');
+}
+
+// Активирует карту и форму
+var mapPinMain = document.querySelector('.map__pin--main');
+mapPinMain.addEventListener('mouseup', pinMouseupHendler);
+mapPinMain.addEventListener('mouseup', pinMouseupReadyMapHandler);
+
+// function showPin(arr) {
+//   for (var i = 0; i < arr.length; i++) {
+
+//   }
+// }
+var mapPin = document.querySelector('.map__pin');
+
+// При клике на любой блок map__pin показывать -->
+// объявление mapPinBox.appendChild(cardMap);
