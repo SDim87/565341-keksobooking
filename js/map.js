@@ -141,7 +141,15 @@ function getPinLocation(element) {
     pin.querySelector('img').alt = element[i].offer.title;
     fragmentPin.appendChild(pin);
 
+    // Добавляет объявление на карту при клике
+    function pinListenerCreator (element) {
+      pin.addEventListener('click', function() {
+        var cardMap = createCard(offerList[element]);
+        mapPinBox.appendChild(cardMap);
+      })
 
+    }
+    pinListenerCreator(i);
   }
 
   return fragmentPin;
@@ -188,6 +196,10 @@ function createCard(element) {
 
 }
 
+var mapPinBox = document.querySelector('.map__pins');
+var mapPin = document.querySelector('.map__pin');
+var mapPinAll = document.querySelectorAll('.map__pin');
+
 // Блокирует карту и поля ввода
 var mainForm = document.querySelector('.ad-form');
 var lockFildset = document.querySelectorAll('fieldset');
@@ -199,31 +211,7 @@ for (var i = 0; i < lockFildset.length; i++) {
 var inputAddress = document.getElementById('address');
 inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
 
-var mapPinBox = document.querySelector('.map__pins');
-var mapPin = document.querySelector('.map__pin');
-var mapPinAll = document.querySelectorAll('.map__pin');
-
-// Добавляет объявление на карту
-var cardMap = createCard(offerList[0]);
-mapPinBox.appendChild(cardMap);
-
-// Добавляет объявление на карту
-mapPin.addEventListener('click', function onClickPin(argument) {
-  if (cardMap) {
-    mapPinBox.removeChild(cardMap);
-  }
-
-  var pot = mapPinAll.getAttribute('data-number');
-  console.log(pot);
-
-});
-
-for (var i = 0; i < mapPinAll.length; i++) {
-    var pot = mapPinAll[i].hasAttribute('data-number');
-    console.log(pot);
-  }
-
-// Определение точки ввода PIN (alfa version 1.0 ) :)
+// Определение точки ввода PIN
 // inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
 
 // Разблокирует карту и Возвращает метки
@@ -244,12 +232,15 @@ function onMouseupPinMain() {
 var mapPinMain = document.querySelector('.map__pin--main');
 mapPinMain.addEventListener('mouseup', onMouseupPinMain);
 
-// function showPin(arr) {
-//   for (var i = 0; i < arr.length; i++) {
+//Закрытие окна объявления
+function onClickPopupClose() {
+  var mapCardClose = document.querySelector('.map__card > .popup__close');
 
-//   }
-// }
+  if (mapCardClose) {
+    mapCardClose.addEventListener('click', function(){
+      mapPinBox.removeChild(cardMap);
+    })
+  }
+}
 
 
-// При клике на любой блок map__pin показывать -->
-// объявление mapPinBox.appendChild(cardMap);
