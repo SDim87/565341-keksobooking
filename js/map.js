@@ -89,7 +89,7 @@ function createOffers() {
       type: getRandomArrayNumber(type),
       rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
-      checkpoint: 'Заезд после ' + getRandomArrayNumber(checkpoint) + ', выезд до ' + getRandomArrayNumber(checkpoint),
+      checkpoint: getRandomArrayNumber(checkpoint),
       features: getRandomLengthArr(features),
       description: '',
       photos: getRandomArrayNumber(photos)
@@ -170,7 +170,7 @@ function createCard(element) {
   popupItem.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
   popupItem.querySelector('.popup__type').textContent = getTipes(element.offer.type);
   popupItem.querySelector('.popup__text--capacity').textContent = element.offer.rooms + ' комнаты для ' + element.offer.guests + ' гостей';
-  popupItem.querySelector('.popup__text--time').textContent = element.offer.checkpoint;
+  popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkpoint + ', выезд до ' + element.offer.checkpoint;
 
   // Добавление features
   var featuresTemlate = popupItem.querySelector('.popup__features');
@@ -193,8 +193,7 @@ function createCard(element) {
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
 
   popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
-
-
+  document.addEventListener('keydown', onClickPopupCloseEsc);
   return popupItem;
 
 }
@@ -235,7 +234,7 @@ function onMouseupPinMain() {
 var mapPinMain = document.querySelector('.map__pin--main');
 mapPinMain.addEventListener('mouseup', onMouseupPinMain);
 
-//Закрытие окна объявления
+// Закрытие popup по click
 function onClickPopupClose() {
   var cardMap = document.querySelector('.map__card.popup');
   if (cardMap) {
@@ -243,5 +242,37 @@ function onClickPopupClose() {
   }
 }
 
+// Закрытие popup по ESC
+function onClickPopupCloseEsc(evt) {
+  var cardMap = document.querySelector('.map__card.popup');
+  if (cardMap && evt.keyCode === 27) {
+    mapPinBox.removeChild(cardMap);
+    document.removeEventListener('keydown', onClickPopupCloseEsc);
+  }
+}
 
+// Замена сообщений при валидации поля title
+var titleForm = document.getElementById('title');
 
+titleForm.addEventListener('invalid', function (evt) {
+  if (titleForm.validity.valueMissing) {
+    titleForm.setCustomValidity('Это обязательное поле. Введите заголовок объавления');
+  } else if (titleForm.validity.tooShort) {
+    titleForm.setCustomValidity('Короткий заголовок объявления (минимум 30 знаков)');
+  } else {
+    titleForm.setCustomValidity('');
+  }
+});
+
+// Замена сообщений при валидации поля title
+var priceForm = document.getElementById('price');
+
+priceForm.addEventListener('invalid', function (evt) {
+  if (priceForm.validity.valueMissing) {
+    priceForm.setCustomValidity('Это обязательное поле. Введите цену');
+  } else if (priceForm.validity.rangeOverflow) {
+    priceForm.setCustomValidity('Это слишком большая цена (максимум 1 миллион)');
+  } else {
+    priceForm.setCustomValidity('');
+  }
+});
