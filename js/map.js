@@ -11,6 +11,11 @@ var MIN_X_LOCATION = 300;
 var MAX_X_LOCATION = 900;
 var MIN_Y_LOCATION = 130;
 var MAX_Y_LOCATION = 630;
+var PIN_WIDTH = 62;
+var PIN_HEIGHT = 62;
+var PIN_HEIGHT_AFTER = 22;
+var pinMainLeft = 570;
+var pinMainTop = 375;
 
 // Переменные
 var title = [
@@ -120,44 +125,41 @@ function getTipes(obj) {
 
 }
 
-// Удаляет класс .map--faded
-function renderMap() {
-  document.querySelector('.map').classList.remove('map--faded');
-}
-
-// Разблокирует карту
-renderMap();
-
-// вызов рандом объекты
-var offerList = createOffers(OBJECT_COUNT);
-
 // Создает метки на карте
-function mapPinLocation(element) {
+function getPinLocation(element) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
-    var mapPinX = element[i].location.x / 2;
-    var mapPinY = element[i].location.y;
+    var mapPinX = element[i].location.x - PIN_WIDTH / 2;
+    var mapPinY = element[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
     var pin = pinTemplate.cloneNode(true);
 
     pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
+    pin.setAttribute('data-number', [i]);
     pin.querySelector('img').src = element[i].autor.avatar;
     pin.querySelector('img').alt = element[i].offer.title;
     fragmentPin.appendChild(pin);
+
+    // Добавляет объявление на карту при клике
+    function onClickPin (element) {
+      pin.addEventListener('click', function() {
+        var cardMap = createCard(offerList[element]);
+        mapPinBox.appendChild(cardMap);
+      })
+
+    }
+    onClickPin(i);
   }
 
   return fragmentPin;
 
 }
 
-var mapPinBox = document.querySelector('.map__pins');
-var pinsList = mapPinLocation(offerList);
-mapPinBox.appendChild(pinsList);
+// вызов рандом объекты
+var offerList = createOffers(OBJECT_COUNT);
 
-// Создает Пины на карте
-mapPinLocation(offerList);
-
+// Создает блок объявления
 function createCard(element) {
   var popupTemplate = document.querySelector('template').content.querySelector('.popup');
   var popupItem = popupTemplate.cloneNode(true);
@@ -190,10 +192,56 @@ function createCard(element) {
   popupItem.querySelector('.popup__description').textContent = element.offer.description;
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
 
+  popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
+
+
   return popupItem;
 
 }
 
-var cardMap = createCard(offerList[0]);
-mapPinBox.appendChild(cardMap);
+var mapPinBox = document.querySelector('.map__pins');
+var mapPin = document.querySelector('.map__pin');
+var mapPinAll = document.querySelectorAll('.map__pin');
+
+// Блокирует карту и поля ввода
+var mainForm = document.querySelector('.ad-form');
+var lockFildset = document.querySelectorAll('fieldset');
+for (var i = 0; i < lockFildset.length; i++) {
+  lockFildset[i].setAttribute('disabled', '');
+}
+
+// Заполнение поля адреса
+var inputAddress = document.getElementById('address');
+inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
+
+// Определение точки ввода PIN
+// inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
+
+// Разблокирует карту и Возвращает метки
+function onMouseupPinMain() {
+  document.querySelector('.map').classList.remove('map--faded');
+
+  for (var j = 0; j < lockFildset.length; j++) {
+    lockFildset[j].removeAttribute('disabled');
+  }
+
+  mainForm.classList.remove('ad-form--disabled');
+
+  var pinsList = getPinLocation(offerList);
+  mapPinBox.appendChild(pinsList); // добавляет метки на карту
+}
+
+// Активирует карту и форму
+var mapPinMain = document.querySelector('.map__pin--main');
+mapPinMain.addEventListener('mouseup', onMouseupPinMain);
+
+//Закрытие окна объявления
+function onClickPopupClose() {
+  var cardMap = document.querySelector('.map__card.popup');
+  if (cardMap) {
+    mapPinBox.removeChild(cardMap);
+  }
+}
+
+
 
