@@ -142,14 +142,14 @@ function getPinLocation(element) {
     fragmentPin.appendChild(pin);
 
     // Добавляет объявление на карту при клике
-    function pinListenerCreator (element) {
+    function onClickPin (element) {
       pin.addEventListener('click', function() {
         var cardMap = createCard(offerList[element]);
         mapPinBox.appendChild(cardMap);
       })
 
     }
-    pinListenerCreator(i);
+    onClickPin(i);
   }
 
   return fragmentPin;
@@ -191,6 +191,9 @@ function createCard(element) {
 
   popupItem.querySelector('.popup__description').textContent = element.offer.description;
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
+
+  popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
+
 
   return popupItem;
 
@@ -234,13 +237,11 @@ mapPinMain.addEventListener('mouseup', onMouseupPinMain);
 
 //Закрытие окна объявления
 function onClickPopupClose() {
-  var mapCardClose = document.querySelector('.map__card > .popup__close');
-
-  if (mapCardClose) {
-    mapCardClose.addEventListener('click', function(){
-      mapPinBox.removeChild(cardMap);
-    })
+  var cardMap = document.querySelector('.map__card.popup');
+  if (cardMap) {
+    mapPinBox.removeChild(cardMap);
   }
 }
+
 
 
