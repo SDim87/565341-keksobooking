@@ -276,3 +276,94 @@ priceForm.addEventListener('invalid', function (evt) {
     priceForm.setCustomValidity('');
   }
 });
+
+
+// 1
+// var typeFormOptions = document.getElementById('type').querySelectorAll('option'); // коллекция[] Типы жилья
+// for (var i = 0; i < typeFormOptions.length; i++) {
+//   typeFormOptions[i].setAttribute('data-number', [i])
+
+//   if (typeFormOptions[i].getAttribute('value') === 'bungalo') {
+//     priceForm.setAttribute('placeholder', 0);
+//     console.log(typeFormOptions[i]);
+//   }
+//   //console.log(typeFormOptions[i].getAttribute);
+// }
+
+// // 2
+// var typeFormOptions = document.getElementById('type').options;
+// var typeFormOption = document.getElementById('type').options.selectedIndex; // коллекция[] Типы жилья
+
+//   if (typeFormOption === 1) {
+//     priceForm.setAttribute('placeholder', 0);
+//   } else if (typeFormOption === 0) {
+
+//     priceForm.setAttribute('placeholder', 1000);
+//   }
+  //console.log(typeFormOptions[i].getAttribute);
+
+// 3
+
+
+var typeFormOptions = document.getElementById('type');
+
+function onChangeTypeForm() {
+  var indexSelect = typeFormOptions.selectedIndex;
+  if (indexSelect === 0) {
+    priceForm.setAttribute('placeholder', 0);
+    priceForm.setAttribute('min', 0);
+  } else if (indexSelect === 1) {
+    priceForm.setAttribute('placeholder', 1000);
+    priceForm.setAttribute('min', 1000);
+  } else if (indexSelect === 2) {
+    priceForm.setAttribute('placeholder', 5000);
+    priceForm.setAttribute('min', 5000);
+  } else if (indexSelect === 3) {
+    priceForm.setAttribute('placeholder', 10000);
+    priceForm.setAttribute('min', 10000);
+  }
+}
+
+// Навешивает обработчик на выбор пунктов Select --> #type
+typeFormOptions.addEventListener('change', onChangeTypeForm);
+
+
+
+var roomNumber = document.getElementById('room_number');
+var capacity = document.getElementById('capacity');
+
+function onChangeRooms() {
+  var indexRoomNumber = roomNumber.selectedIndex;
+  var indexCapacity = capacity.selectedIndex;
+
+  if (indexRoomNumber === 0) {
+    capacity.options[2].setAttribute('selected', '');
+    capacity.options[0].disabled = true;
+    capacity.options[1].disabled = true;
+    capacity.options[2].disabled = false;
+    capacity.options[3].disabled = true;
+    capacity.options[3].removeAttribute('selected');
+  } else if (indexRoomNumber === 1) {
+    capacity.options[0].disabled = true;
+    capacity.options[1].disabled = false;
+    capacity.options[2].disabled = false;
+    capacity.options[3].disabled = true;
+  } else if (indexRoomNumber === 2) {
+    capacity.options[0].disabled = false;
+    capacity.options[1].disabled = false;
+    capacity.options[2].disabled = false;
+    capacity.options[3].disabled = true;
+  } else if (indexRoomNumber === 3) {
+    capacity.options[0].disabled = true;
+    capacity.options[1].disabled = true;
+    capacity.options[2].disabled = true;
+    capacity.options[2].removeAttribute('selected');
+    capacity.options[3].disabled = false;
+    capacity.options[3].setAttribute('selected', '');
+  }
+}
+
+roomNumber.addEventListener('change', onChangeRooms);
+
+
+
