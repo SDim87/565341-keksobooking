@@ -328,7 +328,7 @@ function onChangeTypeForm() {
 typeFormOptions.addEventListener('change', onChangeTypeForm);
 
 
-
+// Зависимость кол-ва Мест от кол-ва Комнат
 var roomNumber = document.getElementById('room_number');
 var capacity = document.getElementById('capacity');
 
@@ -365,5 +365,20 @@ function onChangeRooms() {
 
 roomNumber.addEventListener('change', onChangeRooms);
 
+// Создается зависимость Select-ов Вода заезда и Выезда
+var timeSelects = document.querySelectorAll('.ad-form__element.ad-form__element--time > select');
 
+for (var i = 0; i < timeSelects.length; i++) {
+
+  timeSelects[i].addEventListener('change', function onChangeTime(evt) {
+    var id = this.getAttribute('id');
+    var select = 0;
+    if (id === 'timein') {
+      select = document.querySelector('#timeout');
+    } else if (id === 'timeout') {
+      select = document.querySelector('#timein');
+    }
+    select.value = this.value;
+  })
+}
 
