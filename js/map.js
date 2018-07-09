@@ -142,11 +142,11 @@ function getPinLocation(element) {
     fragmentPin.appendChild(pin);
 
     // Добавляет объявление на карту при клике
-    function onClickPin (element) {
-      pin.addEventListener('click', function() {
+    function onClickPin() {
+      pin.addEventListener('click', function () {
         var cardMap = createCard(offerList[element]);
         mapPinBox.appendChild(cardMap);
-      })
+      });
 
     }
     onClickPin(i);
@@ -199,8 +199,6 @@ function createCard(element) {
 }
 
 var mapPinBox = document.querySelector('.map__pins');
-var mapPin = document.querySelector('.map__pin');
-var mapPinAll = document.querySelectorAll('.map__pin');
 
 // Блокирует карту и поля ввода
 var mainForm = document.querySelector('.ad-form');
@@ -210,7 +208,7 @@ for (var i = 0; i < lockFildset.length; i++) {
 }
 
 // Заполнение поля адреса
-var inputAddress = document.getElementById('address');
+var inputAddress = document.querySelector('input[name=address]');
 inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
 
 // Определение точки ввода PIN
@@ -251,76 +249,29 @@ function onClickPopupCloseEsc(evt) {
   }
 }
 
-// Замена сообщений при валидации поля title
-var titleForm = document.getElementById('title');
-
-titleForm.addEventListener('invalid', function (evt) {
-  if (titleForm.validity.valueMissing) {
-    titleForm.setCustomValidity('Это обязательное поле. Введите заголовок объавления');
-  } else if (titleForm.validity.tooShort) {
-    titleForm.setCustomValidity('Короткий заголовок объявления (минимум 30 знаков)');
-  } else {
-    titleForm.setCustomValidity('');
-  }
-});
-
-// Замена сообщений при валидации поля title
-var priceForm = document.getElementById('price');
-
-priceForm.addEventListener('invalid', function (evt) {
-  if (priceForm.validity.valueMissing) {
-    priceForm.setCustomValidity('Это обязательное поле. Введите цену');
-  } else if (priceForm.validity.rangeOverflow) {
-    priceForm.setCustomValidity('Это слишком большая цена (максимум 1 миллион)');
-  } else {
-    priceForm.setCustomValidity('');
-  }
-});
-
-
-// 1
-// var typeFormOptions = document.getElementById('type').querySelectorAll('option'); // коллекция[] Типы жилья
-// for (var i = 0; i < typeFormOptions.length; i++) {
-//   typeFormOptions[i].setAttribute('data-number', [i])
-
-//   if (typeFormOptions[i].getAttribute('value') === 'bungalo') {
-//     priceForm.setAttribute('placeholder', 0);
-//     console.log(typeFormOptions[i]);
-//   }
-//   //console.log(typeFormOptions[i].getAttribute);
-// }
-
-// // 2
-// var typeFormOptions = document.getElementById('type').options;
-// var typeFormOption = document.getElementById('type').options.selectedIndex; // коллекция[] Типы жилья
-
-//   if (typeFormOption === 1) {
-//     priceForm.setAttribute('placeholder', 0);
-//   } else if (typeFormOption === 0) {
-
-//     priceForm.setAttribute('placeholder', 1000);
-//   }
-  //console.log(typeFormOptions[i].getAttribute);
-
-// 3
-
-
-var typeFormOptions = document.getElementById('type');
+var priceForm = document.querySelector('input[name=price]');
+var typeFormOptions = document.querySelector('select[name=type]');
 
 function onChangeTypeForm() {
-  var indexSelect = typeFormOptions.selectedIndex;
-  if (indexSelect === 0) {
-    priceForm.setAttribute('placeholder', 0);
-    priceForm.setAttribute('min', 0);
-  } else if (indexSelect === 1) {
-    priceForm.setAttribute('placeholder', 1000);
-    priceForm.setAttribute('min', 1000);
-  } else if (indexSelect === 2) {
-    priceForm.setAttribute('placeholder', 5000);
-    priceForm.setAttribute('min', 5000);
-  } else if (indexSelect === 3) {
-    priceForm.setAttribute('placeholder', 10000);
-    priceForm.setAttribute('min', 10000);
+  var indexSelect = typeFormOptions.value;
+
+  switch (indexSelect) {
+    case 'bungalo':
+      priceForm.placeholder = 0;
+      priceForm.min = 0;
+      break;
+    case 'flat':
+      priceForm.placeholder = 1000;
+      priceForm.min = 1000;
+      break;
+    case 'house':
+      priceForm.placeholder = 5000;
+      priceForm.min = 5000;
+      break;
+    case 'palace':
+      priceForm.placeholder = 10000;
+      priceForm.min = 10000;
+      break;
   }
 }
 
@@ -329,12 +280,11 @@ typeFormOptions.addEventListener('change', onChangeTypeForm);
 
 
 // Зависимость кол-ва Мест от кол-ва Комнат
-var roomNumber = document.getElementById('room_number');
-var capacity = document.getElementById('capacity');
+var roomNumber = document.querySelector('select[name=rooms]');
+var capacity = document.querySelector('select[name=capacity]');
 
 function onChangeRooms() {
   var indexRoomNumber = roomNumber.selectedIndex;
-  var indexCapacity = capacity.selectedIndex;
 
   if (indexRoomNumber === 0) {
     capacity.options[2].setAttribute('selected', '');
@@ -365,20 +315,18 @@ function onChangeRooms() {
 
 roomNumber.addEventListener('change', onChangeRooms);
 
-// Создается зависимость Select-ов Вода заезда и Выезда
-var timeSelects = document.querySelectorAll('.ad-form__element.ad-form__element--time > select');
+// Создается зависимость Select-ов Вода заезда и Выезда(этот код не рабочий)
+var fielsetTime = document.querySelector('fieldset.ad-form__element--time');
 
-for (var i = 0; i < timeSelects.length; i++) {
+fielsetTime.addEventListener('change', function onChangeTime() {
+  var id = fielsetTime.querySelector('select').getAttribute('id');
+  var select = 0;
+  if (id === 'timein') {
+    select = fielsetTime.querySelector('#timeout');
+  } else if (id === 'timeout') {
+    select = fielsetTime.querySelector('#timein');
+  }
+  select.value = id.querySelector('select').value;
+});
 
-  timeSelects[i].addEventListener('change', function onChangeTime(evt) {
-    var id = this.getAttribute('id');
-    var select = 0;
-    if (id === 'timein') {
-      select = document.querySelector('#timeout');
-    } else if (id === 'timeout') {
-      select = document.querySelector('#timein');
-    }
-    select.value = this.value;
-  })
-}
 
