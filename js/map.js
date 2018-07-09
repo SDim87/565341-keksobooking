@@ -126,25 +126,25 @@ function getTipes(obj) {
 }
 
 // Создает метки на карте
-function getPinLocation(element) {
+function getPinLocation(array) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
-    var mapPinX = element[i].location.x - PIN_WIDTH / 2;
-    var mapPinY = element[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
+    var mapPinX = array[i].location.x - PIN_WIDTH / 2;
+    var mapPinY = array[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
     var pin = pinTemplate.cloneNode(true);
 
     pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
     pin.setAttribute('data-number', [i]);
-    pin.querySelector('img').src = element[i].autor.avatar;
-    pin.querySelector('img').alt = element[i].offer.title;
+    pin.querySelector('img').src = array[i].autor.avatar;
+    pin.querySelector('img').alt = array[i].offer.title;
     fragmentPin.appendChild(pin);
 
     // Добавляет объявление на карту при клике
-    function onClickPin() {
+    function onClickPin(item) {
       pin.addEventListener('click', function () {
-        var cardMap = createCard(offerList[element]);
+        var cardMap = createCard(offerList[item]);
         mapPinBox.appendChild(cardMap);
       });
 
@@ -215,7 +215,7 @@ inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HE
 // inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
 
 // Разблокирует карту и Возвращает метки
-function onMouseupPinMain() {
+function onClickPinMain() {
   document.querySelector('.map').classList.remove('map--faded');
 
   for (var j = 0; j < lockFildset.length; j++) {
@@ -224,13 +224,14 @@ function onMouseupPinMain() {
 
   mainForm.classList.remove('ad-form--disabled');
 
+  // добавляет метки на карту
   var pinsList = getPinLocation(offerList);
-  mapPinBox.appendChild(pinsList); // добавляет метки на карту
+  mapPinBox.appendChild(pinsList);
 }
 
 // Активирует карту и форму
 var mapPinMain = document.querySelector('.map__pin--main');
-mapPinMain.addEventListener('mouseup', onMouseupPinMain);
+mapPinMain.addEventListener('click', onClickPinMain);
 
 // Закрытие popup по click
 function onClickPopupClose() {
