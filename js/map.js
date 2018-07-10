@@ -279,55 +279,72 @@ function onChangeTypeForm() {
 // Навешивает обработчик на выбор пунктов Select --> #type
 typeFormOptions.addEventListener('change', onChangeTypeForm);
 
+var fieldsetTime = document.querySelector('fieldset.ad-form__element--time');
+var adForm = document.querySelector('.ad-form');
+var selectType = adForm.querySelector('#type');
+var inputPrice = adForm.querySelector('#price');
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+var selectRooms = adForm.querySelector('#room_number');
+//var selectedNumRooms = Number(selectRooms.value);
+var selectCapacity = adForm.querySelector('#capacity');
+//var selectNumCapacity = Number(selectCapacity.value);
 
 // Зависимость кол-ва Мест от кол-ва Комнат
-var roomNumber = document.querySelector('select[name=rooms]');
-var capacity = document.querySelector('select[name=capacity]');
-
 function onChangeRooms() {
-  var indexRoomNumber = roomNumber.selectedIndex;
-
-  if (indexRoomNumber === 0) {
-    capacity.options[2].setAttribute('selected', '');
-    capacity.options[0].disabled = true;
-    capacity.options[1].disabled = true;
-    capacity.options[2].disabled = false;
-    capacity.options[3].disabled = true;
-    capacity.options[3].removeAttribute('selected');
-  } else if (indexRoomNumber === 1) {
-    capacity.options[0].disabled = true;
-    capacity.options[1].disabled = false;
-    capacity.options[2].disabled = false;
-    capacity.options[3].disabled = true;
-  } else if (indexRoomNumber === 2) {
-    capacity.options[0].disabled = false;
-    capacity.options[1].disabled = false;
-    capacity.options[2].disabled = false;
-    capacity.options[3].disabled = true;
-  } else if (indexRoomNumber === 3) {
-    capacity.options[0].disabled = true;
-    capacity.options[1].disabled = true;
-    capacity.options[2].disabled = true;
-    capacity.options[2].removeAttribute('selected');
-    capacity.options[3].disabled = false;
-    capacity.options[3].setAttribute('selected', '');
+  var indexSelectRooms = selectRooms.selectedIndex; // индекс Комнаты
+  var optionsRooms = selectRooms.querySelectorAll('option'); // массив всех Комнат
+  var disabledField = {
+    '0': [3],
+    '1': [0],
+    '2': [0, 1],
+    '3': [0, 1, 2]
   }
+
+  for (var i = 0; i < optionsRooms.length; i++) {
+    if (indexSelectRooms === disabledField[i]) {
+
+      console.log('dfgdfgd');
+    }
+    console.log(disabledField[i]);
+  }
+
+
+
+  // if (indexRoomNumber === 0) {
+  //   selectCapacity.options[2].setAttribute('selected', '');
+  //   selectCapacity.options[0].disabled = true;
+  //   selectCapacity.options[1].disabled = true;
+  //   selectCapacity.options[2].disabled = false;
+  //   selectCapacity.options[3].disabled = true;
+  //   selectCapacity.options[3].removeAttribute('selected');
+  // } else if (indexRoomNumber === 1) {
+  //   selectCapacity.options[0].disabled = true;
+  //   selectCapacity.options[1].disabled = false;
+  //   selectCapacity.options[2].disabled = false;
+  //   selectCapacity.options[3].disabled = true;
+  // } else if (indexRoomNumber === 2) {
+  //   selectCapacity.options[0].disabled = false;
+  //   selectCapacity.options[1].disabled = false;
+  //   selectCapacity.options[2].disabled = false;
+  //   selectCapacity.options[3].disabled = true;
+  // } else if (indexRoomNumber === 3) {
+  //   selectCapacity.options[0].disabled = true;
+  //   selectCapacity.options[1].disabled = true;
+  //   selectCapacity.options[2].disabled = true;
+  //   selectCapacity.options[2].removeAttribute('selected');
+  //   selectCapacity.options[3].disabled = false;
+  //   selectCapacity.options[3].setAttribute('selected', '');
+  // }
 }
 
-roomNumber.addEventListener('change', onChangeRooms);
+selectRooms.addEventListener('change', onChangeRooms);
 
-// Создается зависимость Select-ов Вода заезда и Выезда(этот код не рабочий)
-var fielsetTime = document.querySelector('fieldset.ad-form__element--time');
-
-fielsetTime.addEventListener('change', function onChangeTime() {
-  var id = fielsetTime.querySelector('select').getAttribute('id');
-  var select = 0;
-  if (id === 'timein') {
-    select = fielsetTime.querySelector('#timeout');
-  } else if (id === 'timeout') {
-    select = fielsetTime.querySelector('#timein');
+// Создается зависимость Select-ов Вода заезда и Выезда
+fieldsetTime.addEventListener('change', function onChangeTime(event) {
+  if (selectTimeOut === event.target) {
+    selectTimeIn.value = event.target.value
+  } else if (selectTimeIn === event.target) {
+    selectTimeOut.value = event.target.value
   }
-  select.value = id.querySelector('select').value;
 });
-
-
