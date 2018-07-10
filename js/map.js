@@ -281,104 +281,42 @@ typeFormOptions.addEventListener('change', onChangeTypeForm);
 
 var fieldsetTime = document.querySelector('fieldset.ad-form__element--time');
 var adForm = document.querySelector('.ad-form');
-var selectType = adForm.querySelector('#type');
-var inputPrice = adForm.querySelector('#price');
+// var selectType = adForm.querySelector('#type');
+// var inputPrice = adForm.querySelector('#price');
 var selectTimeIn = adForm.querySelector('#timein');
 var selectTimeOut = adForm.querySelector('#timeout');
 var selectRooms = adForm.querySelector('#room_number');
-//var selectedNumRooms = Number(selectRooms.value);
-var selectCapacity = adForm.querySelector('#capacity');
-//var selectNumCapacity = Number(selectCapacity.value);
+var capacitySelect = adForm.querySelector('#capacity');
 
 // Зависимость кол-ва Мест от кол-ва Комнат
 function onChangeRooms() {
-  var indexSelectRooms = selectRooms.selectedIndex; // индекс Комнаты
-  var optionsRooms = selectRooms.querySelectorAll('option'); // массив всех Комнат
+  var selectedValue = selectRooms.value;
+  var capacityOptions = capacitySelect.querySelectorAll('option'); // массив всех Комнат
+
   var disabledField = {
-    '0': [3],
-    '1': [0],
-    '2': [0, 1],
-    '3': [0, 1, 2]
-  }
+    '100': [0],
+    '1': [1],
+    '2': [1, 2],
+    '3': [1, 2, 3]
+  };
+  var enabledOptions = disabledField[selectedValue];
 
-  for (var i = 0; i < optionsRooms.length; i++) {
-    if (indexSelectRooms === disabledField[i]) {
-
-      console.log('dfgdfgd');
+  for (var k = 0; k < capacityOptions.length; k++) {
+    if (enabledOptions.indexOf(+capacityOptions[k].value) !== -1) {
+      capacityOptions[k].disabled = false;
+    } else {
+      capacityOptions[k].disabled = true;
     }
-    console.log(disabledField[i]);
   }
-
-
-
-  // if (indexRoomNumber === 0) {
-  //   selectCapacity.options[2].setAttribute('selected', '');
-  //   selectCapacity.options[0].disabled = true;
-  //   selectCapacity.options[1].disabled = true;
-  //   selectCapacity.options[2].disabled = false;
-  //   selectCapacity.options[3].disabled = true;
-  //   selectCapacity.options[3].removeAttribute('selected');
-  // } else if (indexRoomNumber === 1) {
-  //   selectCapacity.options[0].disabled = true;
-  //   selectCapacity.options[1].disabled = false;
-  //   selectCapacity.options[2].disabled = false;
-  //   selectCapacity.options[3].disabled = true;
-  // } else if (indexRoomNumber === 2) {
-  //   selectCapacity.options[0].disabled = false;
-  //   selectCapacity.options[1].disabled = false;
-  //   selectCapacity.options[2].disabled = false;
-  //   selectCapacity.options[3].disabled = true;
-  // } else if (indexRoomNumber === 3) {
-  //   selectCapacity.options[0].disabled = true;
-  //   selectCapacity.options[1].disabled = true;
-  //   selectCapacity.options[2].disabled = true;
-  //   selectCapacity.options[2].removeAttribute('selected');
-  //   selectCapacity.options[3].disabled = false;
-  //   selectCapacity.options[3].setAttribute('selected', '');
-  // }
+  capacitySelect.querySelectorAll(':enabled')[0].selected = true;
 }
-
 selectRooms.addEventListener('change', onChangeRooms);
 
-// Создается зависимость Select-ов Вода заезда и Выезда
+// Создается зависимость Select-ов Ввода заезда и Выезда
 fieldsetTime.addEventListener('change', function onChangeTime(event) {
   if (selectTimeOut === event.target) {
-    selectTimeIn.value = event.target.value
+    selectTimeIn.value = event.target.value;
   } else if (selectTimeIn === event.target) {
-    selectTimeOut.value = event.target.value
+    selectTimeOut.value = event.target.value;
   }
 });
-
-
-
-// 2й способ
-function onChangeSelectCapacity() {
-  var message = '';
-  selectCapacity.setCustomValidity('');
-
-  switch (selectedNumRooms) {
-    case 1:
-      if (selectNumCapacity !== 1) {
-        message = 'Можно выбрать - 1 гостя';
-      }
-    break;
-    case 2:
-      if (selectNumCapacity !== 1 && selectNumCapacity !== 2) {
-        message = 'Можно выбрать - 1 или 2 гостей';
-      }
-    break;
-    case 3:
-      if (selectNumCapacity !== 1 && selectNumCapacity !== 2 && selectNumCapacity !== 3) {
-        message = 'Можно выбрать - 1, 2 или 3 гостей';
-      }
-    break;
-    case 100:
-      if (selectNumCapacity !== 0) {
-        message = 'Можно выбрать - не для гостей';
-      }
-    break;
-  }
-  selectCapacity.setCustomValidity(message);
-}
-
-selectCapacity.addEventListener('change', onChangeSelectCapacity);
