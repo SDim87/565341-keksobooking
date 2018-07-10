@@ -348,3 +348,37 @@ fieldsetTime.addEventListener('change', function onChangeTime(event) {
     selectTimeOut.value = event.target.value
   }
 });
+
+
+
+// 2й способ
+function onChangeSelectCapacity() {
+  var message = '';
+  selectCapacity.setCustomValidity('');
+
+  switch (selectedNumRooms) {
+    case 1:
+      if (selectNumCapacity !== 1) {
+        message = 'Можно выбрать - 1 гостя';
+      }
+    break;
+    case 2:
+      if (selectNumCapacity !== 1 && selectNumCapacity !== 2) {
+        message = 'Можно выбрать - 1 или 2 гостей';
+      }
+    break;
+    case 3:
+      if (selectNumCapacity !== 1 && selectNumCapacity !== 2 && selectNumCapacity !== 3) {
+        message = 'Можно выбрать - 1, 2 или 3 гостей';
+      }
+    break;
+    case 100:
+      if (selectNumCapacity !== 0) {
+        message = 'Можно выбрать - не для гостей';
+      }
+    break;
+  }
+  selectCapacity.setCustomValidity(message);
+}
+
+selectCapacity.addEventListener('change', onChangeSelectCapacity);
