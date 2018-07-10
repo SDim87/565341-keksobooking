@@ -89,7 +89,7 @@ function createOffers() {
       type: getRandomArrayNumber(type),
       rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
-      checkpoint: 'Заезд после ' + getRandomArrayNumber(checkpoint) + ', выезд до ' + getRandomArrayNumber(checkpoint),
+      checkpoint: getRandomArrayNumber(checkpoint),
       features: getRandomLengthArr(features),
       description: '',
       photos: getRandomArrayNumber(photos)
@@ -126,27 +126,27 @@ function getTipes(obj) {
 }
 
 // Создает метки на карте
-function getPinLocation(element) {
+function getPinLocation(array) {
   var fragmentPin = document.createDocumentFragment();
   var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
   for (var i = 0; i < OBJECT_COUNT; i++) {
-    var mapPinX = element[i].location.x - PIN_WIDTH / 2;
-    var mapPinY = element[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
+    var mapPinX = array[i].location.x - PIN_WIDTH / 2;
+    var mapPinY = array[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
     var pin = pinTemplate.cloneNode(true);
 
     pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
     pin.setAttribute('data-number', [i]);
-    pin.querySelector('img').src = element[i].autor.avatar;
-    pin.querySelector('img').alt = element[i].offer.title;
+    pin.querySelector('img').src = array[i].autor.avatar;
+    pin.querySelector('img').alt = array[i].offer.title;
     fragmentPin.appendChild(pin);
 
     // Добавляет объявление на карту при клике
-    function onClickPin (element) {
-      pin.addEventListener('click', function() {
-        var cardMap = createCard(offerList[element]);
+    function onClickPin(item) {
+      pin.addEventListener('click', function () {
+        var cardMap = createCard(offerList[item]);
         mapPinBox.appendChild(cardMap);
-      })
+      });
 
     }
     onClickPin(i);
@@ -170,7 +170,7 @@ function createCard(element) {
   popupItem.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
   popupItem.querySelector('.popup__type').textContent = getTipes(element.offer.type);
   popupItem.querySelector('.popup__text--capacity').textContent = element.offer.rooms + ' комнаты для ' + element.offer.guests + ' гостей';
-  popupItem.querySelector('.popup__text--time').textContent = element.offer.checkpoint;
+  popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkpoint + ', выезд до ' + element.offer.checkpoint;
 
   // Добавление features
   var featuresTemlate = popupItem.querySelector('.popup__features');
@@ -193,15 +193,12 @@ function createCard(element) {
   popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
 
   popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
-
-
+  document.addEventListener('keydown', onClickPopupCloseEsc);
   return popupItem;
 
 }
 
 var mapPinBox = document.querySelector('.map__pins');
-var mapPin = document.querySelector('.map__pin');
-var mapPinAll = document.querySelectorAll('.map__pin');
 
 // Блокирует карту и поля ввода
 var mainForm = document.querySelector('.ad-form');
@@ -211,14 +208,14 @@ for (var i = 0; i < lockFildset.length; i++) {
 }
 
 // Заполнение поля адреса
-var inputAddress = document.getElementById('address');
+var inputAddress = document.querySelector('input[name=address]');
 inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
 
 // Определение точки ввода PIN
 // inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
 
 // Разблокирует карту и Возвращает метки
-function onMouseupPinMain() {
+function onClickPinMain() {
   document.querySelector('.map').classList.remove('map--faded');
 
   for (var j = 0; j < lockFildset.length; j++) {
@@ -227,15 +224,16 @@ function onMouseupPinMain() {
 
   mainForm.classList.remove('ad-form--disabled');
 
+  // добавляет метки на карту
   var pinsList = getPinLocation(offerList);
-  mapPinBox.appendChild(pinsList); // добавляет метки на карту
+  mapPinBox.appendChild(pinsList);
 }
 
 // Активирует карту и форму
 var mapPinMain = document.querySelector('.map__pin--main');
-mapPinMain.addEventListener('mouseup', onMouseupPinMain);
+mapPinMain.addEventListener('click', onClickPinMain);
 
-//Закрытие окна объявления
+// Закрытие popup по click
 function onClickPopupClose() {
   var cardMap = document.querySelector('.map__card.popup');
   if (cardMap) {
@@ -243,5 +241,82 @@ function onClickPopupClose() {
   }
 }
 
+// Закрытие popup по ESC
+function onClickPopupCloseEsc(evt) {
+  var cardMap = document.querySelector('.map__card.popup');
+  if (cardMap && evt.keyCode === 27) {
+    mapPinBox.removeChild(cardMap);
+    document.removeEventListener('keydown', onClickPopupCloseEsc);
+  }
+}
 
+var priceForm = document.querySelector('input[name=price]');
+var typeFormOptions = document.querySelector('select[name=type]');
 
+function onChangeTypeForm() {
+  var indexSelect = typeFormOptions.value;
+
+  switch (indexSelect) {
+    case 'bungalo':
+      priceForm.placeholder = 0;
+      priceForm.min = 0;
+      break;
+    case 'flat':
+      priceForm.placeholder = 1000;
+      priceForm.min = 1000;
+      break;
+    case 'house':
+      priceForm.placeholder = 5000;
+      priceForm.min = 5000;
+      break;
+    case 'palace':
+      priceForm.placeholder = 10000;
+      priceForm.min = 10000;
+      break;
+  }
+}
+
+// Навешивает обработчик на выбор пунктов Select --> #type
+typeFormOptions.addEventListener('change', onChangeTypeForm);
+
+var fieldsetTime = document.querySelector('fieldset.ad-form__element--time');
+var adForm = document.querySelector('.ad-form');
+// var selectType = adForm.querySelector('#type');
+// var inputPrice = adForm.querySelector('#price');
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+var selectRooms = adForm.querySelector('#room_number');
+var capacitySelect = adForm.querySelector('#capacity');
+
+// Зависимость кол-ва Мест от кол-ва Комнат
+function onChangeRooms() {
+  var selectedValue = selectRooms.value;
+  var capacityOptions = capacitySelect.querySelectorAll('option'); // массив всех Комнат
+
+  var disabledField = {
+    '100': [0],
+    '1': [1],
+    '2': [1, 2],
+    '3': [1, 2, 3]
+  };
+  var enabledOptions = disabledField[selectedValue];
+
+  for (var k = 0; k < capacityOptions.length; k++) {
+    if (enabledOptions.indexOf(+capacityOptions[k].value) !== -1) {
+      capacityOptions[k].disabled = false;
+    } else {
+      capacityOptions[k].disabled = true;
+    }
+  }
+  capacitySelect.querySelectorAll(':enabled')[0].selected = true;
+}
+selectRooms.addEventListener('change', onChangeRooms);
+
+// Создается зависимость Select-ов Ввода заезда и Выезда
+fieldsetTime.addEventListener('change', function onChangeTime(event) {
+  if (selectTimeOut === event.target) {
+    selectTimeIn.value = event.target.value;
+  } else if (selectTimeIn === event.target) {
+    selectTimeOut.value = event.target.value;
+  }
+});
