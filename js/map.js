@@ -1,3 +1,4 @@
+
 'use strict';
 // Константы
 var OBJECT_COUNT = 8;
@@ -208,11 +209,9 @@ for (var i = 0; i < lockFildset.length; i++) {
 }
 
 // Заполнение поля адреса
-var inputAddress = document.querySelector('input[name=address]');
+var inputAddress = document.querySelector('#address');
 inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
 
-// Определение точки ввода PIN
-// inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT + PIN_HEIGHT_AFTER);
 
 // Разблокирует карту и Возвращает метки
 function onClickPinMain() {
@@ -233,6 +232,73 @@ function onClickPinMain() {
 var mapPinMain = document.querySelector('.map__pin--main');
 mapPinMain.addEventListener('click', onClickPinMain);
 
+var mapLimit = {
+  x: {
+    min: 0,
+    max: 1200
+  },
+  y: {
+    min: 130,
+    max: 630
+  }
+};
+
+// Перетаскивание mapPinMain
+mapPinMain.addEventListener('mousedown', function onMouseDownPinMain(evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  function onMouseMovePinMain(moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var border = {
+      top: mapLimit.y.min - mapPinMain.offsetHeight - PIN_HEIGHT_AFTER,
+      bottom: mapLimit.y.max + mapPinMain.offsetHeight + PIN_HEIGHT_AFTER,
+      left: mapLimit.x.min,
+      right: mapLimit.x.max - mapPinMain.offsetWidth
+    };
+
+    var mapPinMainPosition = {
+      x: mapPinMain.offsetLeft - shift.x,
+      y: mapPinMain.offsetTop - shift.y
+    };
+
+    if (mapPinMainPosition.x >= border.left && mapPinMainPosition.x <= border.right) {
+      mapPinMain.style.left = mapPinMainPosition.x + 'px';
+    }
+    if (mapPinMainPosition.y >= border.top && mapPinMainPosition.y <= border.bottom) {
+      mapPinMain.style.top = mapPinMainPosition.y + 'px';
+    }
+
+    // Вывод адреса в поле
+    inputAddress.value = Math.round(mapPinMainPosition.x) + ', ' + Math.round(mapPinMainPosition.y + PIN_HEIGHT + PIN_HEIGHT_AFTER);
+  }
+
+  function onMouseUpPinMain(upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMovePinMain);
+    document.removeEventListener('mouseup', onMouseUpPinMain);
+  }
+
+  document.addEventListener('mousemove', onMouseMovePinMain);
+  document.addEventListener('mouseup', onMouseUpPinMain);
+});
+
 // Закрытие popup по click
 function onClickPopupClose() {
   var cardMap = document.querySelector('.map__card.popup');
@@ -250,43 +316,41 @@ function onClickPopupCloseEsc(evt) {
   }
 }
 
-var priceForm = document.querySelector('input[name=price]');
-var typeFormOptions = document.querySelector('select[name=type]');
+// =======  form.js  =======
+var fieldsetTime = document.querySelector('fieldset.ad-form__element--time');
+var adForm = document.querySelector('.ad-form');
+var selectType = adForm.querySelector('#type');
+var priceInput = adForm.querySelector('#price');
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+var selectRooms = adForm.querySelector('#room_number');
+var capacitySelect = adForm.querySelector('#capacity');
 
 function onChangeTypeForm() {
-  var indexSelect = typeFormOptions.value;
+  var indexSelect = selectType.value;
 
   switch (indexSelect) {
     case 'bungalo':
-      priceForm.placeholder = 0;
-      priceForm.min = 0;
+      priceInput.placeholder = 0;
+      priceInput.min = 0;
       break;
     case 'flat':
-      priceForm.placeholder = 1000;
-      priceForm.min = 1000;
+      priceInput.placeholder = 1000;
+      priceInput.min = 1000;
       break;
     case 'house':
-      priceForm.placeholder = 5000;
-      priceForm.min = 5000;
+      priceInput.placeholder = 5000;
+      priceInput.min = 5000;
       break;
     case 'palace':
-      priceForm.placeholder = 10000;
-      priceForm.min = 10000;
+      priceInput.placeholder = 10000;
+      priceInput.min = 10000;
       break;
   }
 }
 
 // Навешивает обработчик на выбор пунктов Select --> #type
-typeFormOptions.addEventListener('change', onChangeTypeForm);
-
-var fieldsetTime = document.querySelector('fieldset.ad-form__element--time');
-var adForm = document.querySelector('.ad-form');
-// var selectType = adForm.querySelector('#type');
-// var inputPrice = adForm.querySelector('#price');
-var selectTimeIn = adForm.querySelector('#timein');
-var selectTimeOut = adForm.querySelector('#timeout');
-var selectRooms = adForm.querySelector('#room_number');
-var capacitySelect = adForm.querySelector('#capacity');
+selectType.addEventListener('change', onChangeTypeForm);
 
 // Зависимость кол-ва Мест от кол-ва Комнат
 function onChangeRooms() {
