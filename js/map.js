@@ -1,4 +1,3 @@
-
 'use strict';
 // Константы
 var OBJECT_COUNT = 8;
@@ -19,7 +18,7 @@ var pinMainLeft = 570;
 var pinMainTop = 375;
 
 // Переменные
-var title = [
+var titles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
   'Огромный прекрасный дворец',
@@ -29,13 +28,13 @@ var title = [
   'Уютное бунгало далеко от моря',
   'Неуютное бунгало по колено в воде'
 ];
-var type = [
+var types = [
   'palace',
   'flat',
   'house',
   'bungalo'
 ];
-var checkpoint = [
+var checkpoints = [
   '12:00',
   '13:00',
   '14:00'
@@ -84,13 +83,13 @@ function createOffers() {
     };
 
     var offer = {
-      title: getRandomArrayNumber(title),
+      title: getRandomArrayNumber(titles),
       address: getRandomNumber(MIN_X_LOCATION, MAX_X_LOCATION) + ', ' + getRandomNumber(MIN_Y_LOCATION, MAX_Y_LOCATION),
       price: getRandomNumber(MIN_PRICE, MAX_PRICE),
-      type: getRandomArrayNumber(type),
+      type: getRandomArrayNumber(types),
       rooms: getRandomNumber(MIN_ROOMS, MAX_ROOMS),
       guests: getRandomNumber(MIN_GUEST, MAX_GUEST),
-      checkpoint: getRandomArrayNumber(checkpoint),
+      checkpoint: getRandomArrayNumber(checkpoints),
       features: getRandomLengthArr(features),
       description: '',
       photos: getRandomArrayNumber(photos)
@@ -201,24 +200,33 @@ function createCard(element) {
 
 var mapPinBox = document.querySelector('.map__pins');
 
-// Блокирует карту и поля ввода
+// Блокирует поля ввода
 var mainForm = document.querySelector('.ad-form');
-var lockFildset = document.querySelectorAll('fieldset');
-for (var i = 0; i < lockFildset.length; i++) {
-  lockFildset[i].setAttribute('disabled', '');
+var lockFieldsets = document.querySelectorAll('fieldset');
+for (var i = 0; i < lockFieldsets.length; i++) {
+  lockFieldsets[i].setAttribute('disabled', '');
 }
 
-// Заполнение поля адреса
-var inputAddress = document.querySelector('#address');
-inputAddress.value = (pinMainLeft + PIN_WIDTH / 2) + ', ' + (pinMainTop + PIN_HEIGHT / 2);
+var mapPinMainStart = {
+  x: 601,
+  y: 406
+};
 
+// Заполнение поля адреса
+var mapPinMain = document.querySelector('.map__pin--main');
+var inputAddress = document.querySelector('#address');
+
+mapPinMain.style.top = (pinMainTop + PIN_WIDTH / 2) + 'px';
+mapPinMain.style.left = (pinMainLeft + PIN_HEIGHT / 2) + 'px';
+
+inputAddress.value = (mapPinMainStart.x) + ', ' + (mapPinMainStart.y);
 
 // Разблокирует карту и Возвращает метки
 function onClickPinMain() {
   document.querySelector('.map').classList.remove('map--faded');
 
-  for (var j = 0; j < lockFildset.length; j++) {
-    lockFildset[j].removeAttribute('disabled');
+  for (var j = 0; j < lockFieldsets.length; j++) {
+    lockFieldsets[j].removeAttribute('disabled');
   }
 
   mainForm.classList.remove('ad-form--disabled');
@@ -229,7 +237,6 @@ function onClickPinMain() {
 }
 
 // Активирует карту и форму
-var mapPinMain = document.querySelector('.map__pin--main');
 mapPinMain.addEventListener('click', onClickPinMain);
 
 var mapLimit = {
@@ -267,7 +274,7 @@ mapPinMain.addEventListener('mousedown', function onMouseDownPinMain(evt) {
 
     var border = {
       top: mapLimit.y.min - mapPinMain.offsetHeight - PIN_HEIGHT_AFTER,
-      bottom: mapLimit.y.max + mapPinMain.offsetHeight + PIN_HEIGHT_AFTER,
+      bottom: mapLimit.y.max - mapPinMain.offsetHeight - PIN_HEIGHT_AFTER,
       left: mapLimit.x.min,
       right: mapLimit.x.max - mapPinMain.offsetWidth
     };
@@ -285,7 +292,7 @@ mapPinMain.addEventListener('mousedown', function onMouseDownPinMain(evt) {
     }
 
     // Вывод адреса в поле
-    inputAddress.value = Math.round(mapPinMainPosition.x) + ', ' + Math.round(mapPinMainPosition.y + PIN_HEIGHT + PIN_HEIGHT_AFTER);
+    inputAddress.value = Math.round(mapPinMainPosition.x) + ', ' + Math.round(mapPinMainPosition.y);
   }
 
   function onMouseUpPinMain(upEvt) {
