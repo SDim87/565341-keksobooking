@@ -10,6 +10,7 @@
   var selectRooms = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
   var lockFieldsets = document.querySelectorAll('fieldset');
+  var successPopup = document.querySelector('.success');
 
   // Блокирует форму
   function getDisabledForm() {
@@ -93,6 +94,12 @@
       selectTimeOut.value = event.target.value;
     }
 
+  });
+
+
+  adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+     window.backend.upload();
   });
 
 })();
