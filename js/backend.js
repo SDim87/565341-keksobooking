@@ -8,15 +8,9 @@
   };
 
   var messageError = {
-    'ERROR_LOAD': 'Произшла ошибка. Обновите страницу',
-    'INVALID_QUERY': 'Вы отправили неправильный запрос',
-    'NOT_FOUND': 'Запрашиваемый ресурс не найден',
+    'ERROR_LOAD': 'Произшла ошибка соединения',
     'TIMEOUT': 'Запрос выполняется слишком долго'
   };
-
-  function onError(error) {
-
-  }
 
   function createXhr(method, URL, onLoad, onError) {
     var xhr = new XMLHttpRequest();
@@ -24,19 +18,10 @@
     xhr.timeout = TIMEOUT_VALUE;
 
     xhr.addEventListener('load', function () {
-      var error;
-
-      switch (xhr.status) {
-        case 200: onLoad(xhr.responsive);
-        break;
-        case 400: onError(messageError.INVALID_QUERY);
-        break;
-        case 404: onError(messageError.NOT_FOUND);
-        break;
-      }
-
-      if (error) {
-        onError(error);
+      if (xhr.status === 200) {
+        onLoad(xhr.response);
+      } else {
+        onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
       }
     });
 
@@ -48,17 +33,25 @@
       onError(messageError.TIMEOUT);
     });
 
-    xhr.open(method, URL);
+    xhr.open('GET', serverUrl.download);
 
     return xhr;
 
   }
 
+  // var onError = function (message) {
+  //   console.error(message);
+  // };
+
+  // var onLoad = function (data) {
+  //   console.log(data);
+  // };
+
   function download(onLoad, onError) {
     createXhr('GET', serverUrl.download, onLoad, onError).send();
   }
 
-  function upload(onLoad, onError) {
+  function upload(onLoad, onError, data) {
     createXhr('POST', serverUrl.upload, onLoad, onError).send(data);
   }
 
@@ -67,5 +60,3 @@
     upload: upload
   };
 })();
-
-

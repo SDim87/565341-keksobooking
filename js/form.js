@@ -96,11 +96,32 @@
 
   });
 
+  // Деактивация формы
+  function onSubmitSuccess() {
+    for (var j = 0; j < lockFieldsets.length; j++) {
+      lockFieldsets[j].setAttribute('disabled', '');
+    }
 
+    adForm.classList.add('ad-form--disabled');
+  }
+
+  function onSubmitError(messageError) {
+    createMessageError(messageError);
+  }
+
+  // Отправляет данные на сервер
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-     window.backend.upload();
+    var data = new FormData(adForm);
+    window.backend.upload(onSubmitSuccess, onSubmitError, data);
   });
 
-})();
+  // Создает окно с ошибкой
+  function createMessageError(messageError) {
+    var messageWindow = document.createElement('div');
+    messageWindow.classList.add('message-error');
+    messageWindow.textContent = messageError;
+    document.body.insertAdjacentElement('afterbegin', messageWindow);
+  }
 
+})();
