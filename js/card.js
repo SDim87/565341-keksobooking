@@ -6,8 +6,8 @@
   function createCard(element) {
     var popupTemplate = document.querySelector('template').content.querySelector('.popup');
     var popupItem = popupTemplate.cloneNode(true);
-
-    popupItem.querySelector('.popup__avatar').src = element.autor.avatar;
+    console.log(element)
+    popupItem.querySelector('.popup__avatar').src = element.author.avatar;
     popupItem.querySelector('.popup__title').textContent = element.offer.title;
     popupItem.querySelector('.popup__text--address').textContent = element.offer.address;
     popupItem.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';

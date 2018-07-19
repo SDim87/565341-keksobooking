@@ -14,7 +14,7 @@
 
   function createXhr(method, URL, onLoad, onError) {
     var xhr = new XMLHttpRequest();
-    xhr.responsiveType = 'json';
+    xhr.responseType = 'json';
     xhr.timeout = TIMEOUT_VALUE;
 
     xhr.addEventListener('load', function () {

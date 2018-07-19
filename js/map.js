@@ -10,10 +10,10 @@
   // var offerList = window.data.createOffers(window.data.OBJECT_COUNT);
 
   // Активирует карту и добавляет метки
-  function activePinMain() {
+  function activePinMain(createdData) {
     mapBox.classList.remove('map--faded');
 
-    var pinsList = window.pin.getPinLocation(window.map.offerList);
+    var pinsList = window.pin.getPinLocation(createdData);
     window.mapPinBox.appendChild(pinsList);
   }
 
