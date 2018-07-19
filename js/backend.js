@@ -38,21 +38,16 @@
     return xhr;
 
   }
-
-  // var onError = function (message) {
-  //   console.error(message);
-  // };
-
-  // var onLoad = function (data) {
-  //   console.log(data);
-  // };
-
+  //console.log(method);
+  console.log(URL)
+  // Загружает с сервера
   function download(onLoad, onError) {
-    createXhr('GET', serverUrl.download, onLoad, onError).send();
+    createXhr(method, URL, onLoad, onError).send();
   }
 
+  // Отпарвляет на сервер
   function upload(onLoad, onError, data) {
-    createXhr('POST', serverUrl.upload, onLoad, onError).send(data);
+    createXhr(method, URL, onLoad, onError).send(data);
   }
 
   window.backend = {
