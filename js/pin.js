@@ -39,6 +39,23 @@
 
   }
 
+   function onLoadSuccess() {
+    window.map.activePinMain();
+  }
+
+  function onLoadError() {
+    window.utils.createMessageError();
+  }
+
+  console.log(window.backend.download(onLoadSuccess, onLoadError));
+
+
+
+
+
+
+
+
   // Размеры активного окна карты
   var mapLimit = {
     x: {

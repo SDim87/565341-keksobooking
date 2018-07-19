@@ -6,8 +6,8 @@
   window.mapPinMain = document.querySelector('.map__pin--main');
 
 
-  // вызов рандом объекты
-  var offerList = window.data.createOffers(window.data.OBJECT_COUNT);
+  // // вызов рандом объекты
+  // var offerList = window.data.createOffers(window.data.OBJECT_COUNT);
 
   // Активирует карту и добавляет метки
   function activePinMain() {
@@ -24,7 +24,7 @@
 
   window.map = {
     activePinMain: activePinMain,
-    offerList: offerList,
+    //offerList: offerList,
   };
 
 })();

@@ -22,7 +22,9 @@
     }
   }
 
-  // Активация форму
+  disabledForm();
+
+  // Активация формы
   function activeForm() {
     for (var j = 0; j < lockFieldsets.length; j++) {
       lockFieldsets[j].removeAttribute('disabled');
@@ -30,12 +32,6 @@
 
     adForm.classList.remove('ad-form--disabled');
   }
-
-  // Активация карты и формы
-  window.mapPinMain.addEventListener('click', function onClickActivePage() {
-   window.map.activePinMain();
-   activeForm();
-  })
 
   // Валидация поля пунктов #type
   function onChangeTypeForm() {
@@ -60,9 +56,6 @@
         break;
     }
   }
-
-  // Навешивает обработчик на выбор пунктов Select --> #type
-  selectType.addEventListener('change', onChangeTypeForm);
 
   // Зависимость кол-ва Мест от кол-ва Комнат
   function onChangeRooms() {
@@ -122,31 +115,32 @@
   // Деактивация формы
   function onSubmitSuccess() {
     disabledForm();
+    showSuccessPopup();
+    window.pin.disablePinMain();
   }
 
   function onSubmitError(messageError) {
-    createMessageError(messageError);
+    window.utils.createMessageError(messageError);
   }
+
+   // Навешивает обработчик на выбор пунктов Select --> #type
+  selectType.addEventListener('change', onChangeTypeForm);
+
+  // Активация карты и формы
+  window.mapPinMain.addEventListener('click', function onClickActivePage() {
+   window.map.activePinMain();
+   activeForm();
+  })
 
   // Отправляет данные на сервер
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
     var data = new FormData(adForm);
     window.backend.upload(onSubmitSuccess, onSubmitError, data);
-    showSuccessPopup();
-    window.pin.disablePinMain();
   });
-
-  // Создает окно с ошибкой
-  function createMessageError(messageError) {
-    var messageWindow = document.createElement('div');
-    messageWindow.classList.add('message-error');
-    messageWindow.textContent = messageError;
-    document.body.insertAdjacentElement('afterbegin', messageWindow);
-  }
-
 
   window.form = {
     activeForm: activeForm
   }
+
 })();

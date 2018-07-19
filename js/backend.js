@@ -33,21 +33,20 @@
       onError(messageError.TIMEOUT);
     });
 
-    xhr.open('GET', serverUrl.download);
+    xhr.open(method, URL);
 
     return xhr;
 
   }
-  //console.log(method);
-  console.log(URL)
-  // Загружает с сервера
+
+  // Запрос на сервер
   function download(onLoad, onError) {
-    createXhr(method, URL, onLoad, onError).send();
+    createXhr('GET', serverUrl.download, onLoad, onError).send();
   }
 
   // Отпарвляет на сервер
   function upload(onLoad, onError, data) {
-    createXhr(method, URL, onLoad, onError).send(data);
+    createXhr('POST', serverUrl.upload, onLoad, onError).send(data);
   }
 
   window.backend = {
