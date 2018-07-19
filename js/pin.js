@@ -123,7 +123,31 @@
 
   getAddressValue();
 
+  // Удаляет метки с карты
+  function removePins() {
+    var mapPinsAll = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinsAll.forEach(function (item) {
+      item.remove();
+    })
+  }
+  // Удаление карты объявления
+  function removeCardMap() {
+    if (window.cardMap) {
+      window.cardMap.remove();
+    }
+  }
+
+  // Очистка карты
+  function disablePinMain() {
+    window.mapBox.classList.add('map--faded');
+    removePins();
+    removeCardMap();
+    getAddressValue();
+  }
+
   window.pin = {
-    getPinLocation: getPinLocation
+    getPinLocation: getPinLocation,
+    removePins: removePins,
+    disablePinMain: disablePinMain
   };
 })();

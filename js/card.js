@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  window.cardMap = document.querySelector('.map__card.popup');
   // Создает блок объявления
   function createCard(element) {
     var popupTemplate = document.querySelector('template').content.querySelector('.popup');
@@ -64,7 +65,6 @@
 
   // Закрытие popup по ESC
   function onClickPopupCloseEsc(evt) {
-    var cardMap = document.querySelector('.map__card.popup');
     if (cardMap && evt.keyCode === 27) {
       window.mapPinBox.removeChild(cardMap);
       document.removeEventListener('keydown', onClickPopupCloseEsc);

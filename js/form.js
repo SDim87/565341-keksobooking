@@ -13,17 +13,17 @@
   var successPopup = document.querySelector('.success');
 
   // Блокирует форму
-  function getDisabledForm() {
-
+  function disabledForm() {
     for (var i = 0; i < lockFieldsets.length; i++) {
       lockFieldsets[i].setAttribute('disabled', '');
     }
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      adForm.classList.add('ad-form--disabled');
+    }
   }
 
-  getDisabledForm();
-
-  // Активирует форму
-  function onClickActiveForm() {
+  // Активация форму
+  function activeForm() {
     for (var j = 0; j < lockFieldsets.length; j++) {
       lockFieldsets[j].removeAttribute('disabled');
     }
@@ -31,8 +31,11 @@
     adForm.classList.remove('ad-form--disabled');
   }
 
-  // Активирует форму
-  window.mapPinMain.addEventListener('click', onClickActiveForm);
+  // Активация карты и формы
+  window.mapPinMain.addEventListener('click', function onClickActivePage() {
+   window.map.activePinMain();
+   activeForm();
+  })
 
   // Валидация поля пунктов #type
   function onChangeTypeForm() {
@@ -65,7 +68,6 @@
   function onChangeRooms() {
     var selectedValue = selectRooms.value;
     var capacityOptions = capacitySelect.querySelectorAll('option'); // массив всех Комнат
-
     var disabledField = {
       '100': [0],
       '1': [1],
@@ -96,13 +98,30 @@
 
   });
 
+  // Обработка отправки формы
+  function onSuccessClick() {
+    closeSuccessPopup();
+  }
+
+  function onSuccessEscDown(evt) {
+    window.utils.onEscDown(evt, closeSuccessPopup);
+  }
+
+  function showSuccessPopup() {
+    successPopup.classList.remove('hidden');
+    document.addEventListener('keydown', onSuccessEscDown);
+    successPopup.addEventListener('click', onSuccessClick);
+  }
+
+  function closeSuccessPopup() {
+    successPopup.classList.add('hidden');
+    document.removeEventListener('keydown', onSuccessEscDown);
+    successPopup.removeEventListener('click', onSuccessClick);
+  }
+
   // Деактивация формы
   function onSubmitSuccess() {
-    for (var j = 0; j < lockFieldsets.length; j++) {
-      lockFieldsets[j].setAttribute('disabled', '');
-    }
-
-    adForm.classList.add('ad-form--disabled');
+    disabledForm();
   }
 
   function onSubmitError(messageError) {
@@ -114,6 +133,8 @@
     evt.preventDefault();
     var data = new FormData(adForm);
     window.backend.upload(onSubmitSuccess, onSubmitError, data);
+    showSuccessPopup();
+    window.pin.disablePinMain();
   });
 
   // Создает окно с ошибкой
@@ -124,4 +145,8 @@
     document.body.insertAdjacentElement('afterbegin', messageWindow);
   }
 
+
+  window.form = {
+    activeForm: activeForm
+  }
 })();
