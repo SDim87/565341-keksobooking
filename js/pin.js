@@ -13,21 +13,25 @@
     var fragmentPin = document.createDocumentFragment();
     var pinTemplate = document.querySelector('template').content.querySelector('.map__pin');
 
-    for (var i = 0; i < window.data.OBJECT_COUNT; i++) {
+    for (var i = 0; i < array.length; i++) {
       var mapPinX = array[i].location.x - PIN_WIDTH / 2;
       var mapPinY = array[i].location.y - (PIN_HEIGHT + PIN_HEIGHT_AFTER);
       var pin = pinTemplate.cloneNode(true);
 
       pin.style = 'left: ' + mapPinX + 'px; top: ' + mapPinY + 'px;';
       pin.setAttribute('data-number', [i]);
-      pin.querySelector('img').src = array[i].autor.avatar;
+      pin.querySelector('img').src = array[i].author.avatar;
       pin.querySelector('img').alt = array[i].offer.title;
       fragmentPin.appendChild(pin);
 
       // Добавляет объявление на карту при клике
       function onClickPin(item) {
         pin.addEventListener('click', function () {
-          var cardMap = window.card.createCard(window.map.offerList[item]);
+          var OpenCard = document.querySelector('.map__card');
+          if (OpenCard) {
+            OpenCard.remove();
+          }
+           var cardMap = window.card.createCard(array[item]);
           window.mapPinBox.appendChild(cardMap);
         });
 
@@ -37,6 +41,14 @@
 
     return fragmentPin;
 
+  }
+
+  function onLoadSuccess(data) {
+    window.map.activePinMain(data.slice());
+  }
+
+  function onLoadError() {
+    window.utils.createMessageError();
   }
 
   // Размеры активного окна карты
@@ -123,7 +135,33 @@
 
   getAddressValue();
 
+  // Удаляет метки с карты
+  function removePins() {
+    var mapPinsAll = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinsAll.forEach(function (item) {
+      item.remove();
+    })
+  }
+  // Удаление карты объявления
+  function removeCardMap() {
+    if (window.cardMap) {
+      window.cardMap.remove();
+    }
+  }
+
+  // Очистка карты
+  function disablePinMain() {
+    window.mapBox.classList.add('map--faded');
+    removePins();
+    removeCardMap();
+    getAddressValue();
+  }
+
   window.pin = {
-    getPinLocation: getPinLocation
+    getPinLocation: getPinLocation,
+    removePins: removePins,
+    disablePinMain: disablePinMain,
+    onLoadSuccess: onLoadSuccess,
+    onLoadError: onLoadError
   };
 })();

@@ -1,30 +1,30 @@
 'use strict';
 
 (function () {
-  // Пока так, по Slint нужно заменить все
+  window.mapBox = document.querySelector('.map');
   window.mapPinBox = document.querySelector('.map__pins');
   window.mapPinMain = document.querySelector('.map__pin--main');
 
-  // вызов рандом объекты
-  var offerList = window.data.createOffers(window.data.OBJECT_COUNT);
+
+  // // вызов рандом объекты
+  // var offerList = window.data.createOffers(window.data.OBJECT_COUNT);
 
   // Активирует карту и добавляет метки
-  function onClickPinMain() {
-    document.querySelector('.map').classList.remove('map--faded');
+  function activePinMain(createdData) {
+    mapBox.classList.remove('map--faded');
 
-    var pinsList = window.pin.getPinLocation(window.map.offerList);
+    var pinsList = window.pin.getPinLocation(createdData);
     window.mapPinBox.appendChild(pinsList);
   }
 
-  // Активирует карту
-  window.mapPinMain.addEventListener('click', onClickPinMain);
-
-  // Активирует форму
-  window.mapPinMain.addEventListener('click', window.onClickActiveForm);
+  // function onClickActiveMap() {
+  //   window.mapPinMain.addEventListener('click', activePinMain);
+  // }
+  // onClickActiveMap();
 
   window.map = {
-    onClickPinMain: onClickPinMain,
-    offerList: offerList
+    activePinMain: activePinMain,
+    //offerList: offerList,
   };
 
 })();

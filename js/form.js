@@ -10,28 +10,28 @@
   var selectRooms = adForm.querySelector('#room_number');
   var capacitySelect = adForm.querySelector('#capacity');
   var lockFieldsets = document.querySelectorAll('fieldset');
+  var successPopup = document.querySelector('.success');
 
   // Блокирует форму
-  function getDisabledForm() {
-
+  function disabledForm() {
     for (var i = 0; i < lockFieldsets.length; i++) {
       lockFieldsets[i].setAttribute('disabled', '');
     }
+    if (!adForm.classList.contains('ad-form--disabled')) {
+      adForm.classList.add('ad-form--disabled');
+    }
   }
 
-  getDisabledForm();
+  disabledForm();
 
-  // Активирует форму
-  function onClickActiveForm() {
+  // Активация формы
+  function activeForm() {
     for (var j = 0; j < lockFieldsets.length; j++) {
       lockFieldsets[j].removeAttribute('disabled');
     }
 
     adForm.classList.remove('ad-form--disabled');
   }
-
-  // Активирует форму
-  window.mapPinMain.addEventListener('click', onClickActiveForm);
 
   // Валидация поля пунктов #type
   function onChangeTypeForm() {
@@ -57,14 +57,10 @@
     }
   }
 
-  // Навешивает обработчик на выбор пунктов Select --> #type
-  selectType.addEventListener('change', onChangeTypeForm);
-
   // Зависимость кол-ва Мест от кол-ва Комнат
   function onChangeRooms() {
     var selectedValue = selectRooms.value;
     var capacityOptions = capacitySelect.querySelectorAll('option'); // массив всех Комнат
-
     var disabledField = {
       '100': [0],
       '1': [1],
@@ -95,5 +91,57 @@
 
   });
 
-})();
+  // Обработка отправки формы
+  function onSuccessClick() {
+    closeSuccessPopup();
+  }
 
+  function onSuccessEscDown(evt) {
+    window.utils.onEscDown(evt, closeSuccessPopup);
+  }
+
+  function showSuccessPopup() {
+    successPopup.classList.remove('hidden');
+    document.addEventListener('keydown', onSuccessEscDown);
+    successPopup.addEventListener('click', onSuccessClick);
+  }
+
+  function closeSuccessPopup() {
+    successPopup.classList.add('hidden');
+    document.removeEventListener('keydown', onSuccessEscDown);
+    successPopup.removeEventListener('click', onSuccessClick);
+  }
+
+  // Деактивация формы
+  function onSubmitSuccess() {
+    disabledForm();
+    showSuccessPopup();
+    window.pin.disablePinMain();
+  }
+
+  function onSubmitError(messageError) {
+    window.utils.createMessageError(messageError);
+  }
+
+   // Навешивает обработчик на выбор пунктов Select --> #type
+  selectType.addEventListener('change', onChangeTypeForm);
+
+  // Активация карты и формы
+  window.mapPinMain.addEventListener('click', function onClickActivePage(createdData) {
+    window.backend.download(window.pin.onLoadSuccess, window.pin.onLoadError);
+    window.map.activePinMain(createdData);
+    activeForm();
+  })
+
+  // Отправляет данные на сервер
+  adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    var data = new FormData(adForm);
+    window.backend.upload(onSubmitSuccess, onSubmitError, data);
+  });
+
+  window.form = {
+    activeForm: activeForm
+  }
+
+})();

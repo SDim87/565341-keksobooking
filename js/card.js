@@ -1,18 +1,18 @@
 'use strict';
 
 (function () {
+  window.cardMap = document.querySelector('.map__card.popup');
   // Создает блок объявления
   function createCard(element) {
     var popupTemplate = document.querySelector('template').content.querySelector('.popup');
     var popupItem = popupTemplate.cloneNode(true);
-
-    popupItem.querySelector('.popup__avatar').src = element.autor.avatar;
+    popupItem.querySelector('.popup__avatar').src = element.author.avatar;
     popupItem.querySelector('.popup__title').textContent = element.offer.title;
     popupItem.querySelector('.popup__text--address').textContent = element.offer.address;
     popupItem.querySelector('.popup__text--price').textContent = element.offer.price + '₽/ночь';
     popupItem.querySelector('.popup__type').textContent = getTipes(element.offer.type);
     popupItem.querySelector('.popup__text--capacity').textContent = element.offer.rooms + ' комнаты для ' + element.offer.guests + ' гостей';
-    popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkpoint + ', выезд до ' + element.offer.checkpoint;
+    popupItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + element.offer.checkin + ', выезд до ' + element.offer.checkout;
 
     // Добавление features
     var featuresTemlate = popupItem.querySelector('.popup__features');
@@ -31,8 +31,22 @@
 
     featuresTemlate.appendChild(featuresFragment);
 
-    popupItem.querySelector('.popup__description').textContent = element.offer.description;
-    popupItem.querySelector('.popup__photos > img').src = element.offer.photos;
+    var popupDescription = popupItem.querySelector('.popup__description');
+    popupDescription.textContent = element.offer.description;
+
+    // Отрисовка фотографий
+    var photoBox = popupItem.querySelector('.popup__photos');
+    var photoItem = photoBox.querySelector('.popup__photo');
+    photoBox.innerHTML = '';
+    var fragmentPhoto = document.createDocumentFragment();
+
+    for (var j = 0; j < element.offer.photos.length; j++) {
+      var photoElement = photoItem.cloneNode(true);
+      photoElement.src = element.offer.photos[j];
+      fragmentPhoto.appendChild(photoElement);
+    }
+    photoBox.appendChild(fragmentPhoto);
+    //cardMap.insertBefore(photoBox, popupDescription.nextSibling);
 
     popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
     document.addEventListener('keydown', onClickPopupCloseEsc);
@@ -64,7 +78,6 @@
 
   // Закрытие popup по ESC
   function onClickPopupCloseEsc(evt) {
-    var cardMap = document.querySelector('.map__card.popup');
     if (cardMap && evt.keyCode === 27) {
       window.mapPinBox.removeChild(cardMap);
       document.removeEventListener('keydown', onClickPopupCloseEsc);
