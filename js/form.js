@@ -127,9 +127,10 @@
   selectType.addEventListener('change', onChangeTypeForm);
 
   // Активация карты и формы
-  window.mapPinMain.addEventListener('click', function onClickActivePage() {
-   window.map.activePinMain();
-   activeForm();
+  window.mapPinMain.addEventListener('click', function onClickActivePage(createdData) {
+    window.backend.download(window.pin.onLoadSuccess, window.pin.onLoadError);
+    window.map.activePinMain(createdData);
+    activeForm();
   })
 
   // Отправляет данные на сервер

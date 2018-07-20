@@ -27,7 +27,11 @@
       // Добавляет объявление на карту при клике
       function onClickPin(item) {
         pin.addEventListener('click', function () {
-          var cardMap = window.card.createCard(array[i]);
+          var OpenCard = document.querySelector('.map__card');
+          if (OpenCard) {
+            OpenCard.remove();
+          }
+           var cardMap = window.card.createCard(array[item]);
           window.mapPinBox.appendChild(cardMap);
         });
 
@@ -46,15 +50,6 @@
   function onLoadError() {
     window.utils.createMessageError();
   }
-
-  window.backend.download(onLoadSuccess, onLoadError);
-
-
-
-
-
-
-
 
   // Размеры активного окна карты
   var mapLimit = {
@@ -165,6 +160,8 @@
   window.pin = {
     getPinLocation: getPinLocation,
     removePins: removePins,
-    disablePinMain: disablePinMain
+    disablePinMain: disablePinMain,
+    onLoadSuccess: onLoadSuccess,
+    onLoadError: onLoadError
   };
 })();
