@@ -123,7 +123,7 @@
     window.utils.createMessageError(messageError);
   }
 
-   // Навешивает обработчик на выбор пунктов Select --> #type
+  // Навешивает обработчик на выбор пунктов Select --> #type
   selectType.addEventListener('change', onChangeTypeForm);
 
   // Активация карты и формы
@@ -131,7 +131,7 @@
     window.backend.download(window.pin.onLoadSuccess, window.pin.onLoadError);
     window.map.activePinMain(createdData);
     activeForm();
-  })
+  });
 
   // Отправляет данные на сервер
   adForm.addEventListener('submit', function (evt) {
@@ -142,6 +142,6 @@
 
   window.form = {
     activeForm: activeForm
-  }
+  };
 
 })();

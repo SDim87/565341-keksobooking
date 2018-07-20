@@ -31,7 +31,7 @@
           if (OpenCard) {
             OpenCard.remove();
           }
-           var cardMap = window.card.createCard(array[item]);
+          var cardMap = window.card.createCard(array[item]);
           window.mapPinBox.appendChild(cardMap);
         });
 
@@ -140,7 +140,7 @@
     var mapPinsAll = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinsAll.forEach(function (item) {
       item.remove();
-    })
+    });
   }
   // Удаление карты объявления
   function removeCardMap() {

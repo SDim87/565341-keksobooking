@@ -46,7 +46,6 @@
       fragmentPhoto.appendChild(photoElement);
     }
     photoBox.appendChild(fragmentPhoto);
-    //cardMap.insertBefore(photoBox, popupDescription.nextSibling);
 
     popupItem.querySelector('.popup__close').addEventListener('click', onClickPopupClose);
     document.addEventListener('keydown', onClickPopupCloseEsc);
@@ -70,16 +69,15 @@
 
   // Закрытие popup по click
   function onClickPopupClose() {
-    var cardMap = document.querySelector('.map__card.popup');
-    if (cardMap) {
-      window.mapPinBox.removeChild(cardMap);
+    if (window.cardMap) {
+      window.mapPinBox.removeChild(window.cardMap);
     }
   }
 
   // Закрытие popup по ESC
   function onClickPopupCloseEsc(evt) {
-    if (cardMap && evt.keyCode === 27) {
-      window.mapPinBox.removeChild(cardMap);
+    if (window.cardMap && evt.keyCode === 27) {
+      window.mapPinBox.removeChild(window.cardMap);
       document.removeEventListener('keydown', onClickPopupCloseEsc);
     }
   }
